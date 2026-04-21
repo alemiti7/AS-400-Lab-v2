@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Script — Monitoramento do Sistema — AS/400 Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--g:#00d084;--gd:#00a866;--gk:#007a4a;--am:#f5a623;--rd:#e04040;--bg:#0a0f0d;--bg2:#111a14;--bg3:#162019;--sf:#1a2820;--br:#2a3d30;--br2:#3a5040;--tx:#d4e8d8;--tx2:#7ea88a;--tx3:#4a7055;--mo:'IBM Plex Mono',monospace;--sa:'IBM Plex Sans',sans-serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sa);background:var(--bg);color:var(--tx);min-height:100vh}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,rgba(0,255,100,.022) 0,transparent 2px,transparent 4px);pointer-events:none;z-index:9999}
+a{color:var(--g);text-decoration:none}a:hover{color:var(--gd)}
+header{border-bottom:1px solid var(--br);background:var(--bg2);padding:0 2rem;position:sticky;top:0;z-index:100}
+.hi{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:52px}
+.logo{font-family:var(--mo);font-size:13px;font-weight:600;color:var(--g);display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-box{width:26px;height:26px;border:1px solid var(--g);display:flex;align-items:center;justify-content:center;font-size:10px}
+nav{display:flex;gap:1.5rem}
+nav a{font-family:var(--mo);font-size:11px;color:var(--tx2);letter-spacing:.08em}
+nav a:hover,nav a.active{color:var(--g)}
+.main{max-width:860px;margin:0 auto;padding:2.5rem 2rem 4rem}
+.crumb{font-family:var(--mo);font-size:11px;color:var(--tx3);margin-bottom:1.75rem;display:flex;gap:.4rem;align-items:center}
+.crumb a{color:var(--tx3)}.crumb a:hover{color:var(--g)}
+h1{font-family:var(--mo);font-size:clamp(20px,3.5vw,32px);font-weight:600;color:var(--g);line-height:1.15;margin-bottom:.5rem}
+.subtitle{font-size:15px;color:var(--tx2);margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--br)}
+h2{font-family:var(--mo);font-size:16px;font-weight:600;color:var(--tx);margin:2.5rem 0 .85rem;padding-bottom:.4rem;border-bottom:1px solid var(--br)}
+h3{font-family:var(--mo);font-size:13px;font-weight:600;color:var(--am);margin:1.5rem 0 .5rem}
+p{font-size:15px;color:var(--tx2);line-height:1.75;margin-bottom:.9rem}
+ul,ol{padding-left:1.4rem;color:var(--tx2);font-size:15px;line-height:1.85;margin-bottom:1rem}
+li{margin-bottom:.15rem}
+strong{color:var(--tx);font-weight:600}
+code{font-family:var(--mo);font-size:12px;background:var(--bg3);border:1px solid var(--br);color:var(--g);padding:1px 6px}
+pre{font-family:var(--mo);font-size:13px;background:#050a07;border:1px solid var(--br);color:var(--tx);padding:1.2rem 1.4rem 1.2rem 1.4rem;overflow-x:auto;line-height:1.9;margin:.6rem 0 1.2rem;position:relative;border-left:3px solid var(--gk)}
+.copy-btn{position:absolute;top:7px;right:8px;font-family:var(--mo);font-size:10px;background:var(--sf);border:1px solid var(--br2);color:var(--tx2);padding:3px 8px;cursor:pointer;letter-spacing:.05em}
+.copy-btn:hover{color:var(--g);border-color:var(--g)}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:1rem 0 1.5rem}
+th{font-family:var(--mo);font-size:11px;font-weight:600;color:var(--tx3);letter-spacing:.08em;text-align:left;padding:8px 12px;border-bottom:1px solid var(--br);background:var(--bg2)}
+td{padding:8px 12px;border-bottom:1px solid var(--br);color:var(--tx2);vertical-align:top}
+td code{font-size:12px}
+tr:hover td{background:var(--bg3)}
+.warn{background:rgba(224,64,64,.08);border-left:3px solid var(--rd);padding:.75rem 1rem;font-size:14px;color:var(--tx2);margin:1rem 0;line-height:1.6}
+.warn strong{color:var(--rd)}
+.info{background:rgba(0,208,132,.07);border-left:3px solid var(--gk);padding:.75rem 1rem;font-size:14px;color:var(--tx2);margin:1rem 0;line-height:1.6}
+.page-nav{display:flex;justify-content:space-between;margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--br);flex-wrap:wrap;gap:1rem}
+.page-nav a{font-family:var(--mo);font-size:12px;color:var(--tx2);padding:8px 14px;border:1px solid var(--br);transition:all .15s}
+.page-nav a:hover{color:var(--g);border-color:var(--g);text-decoration:none}
+.lbadge{font-family:var(--mo);font-size:10px;padding:2px 8px;font-weight:600;margin-left:.75rem}
+.lb{background:rgba(0,208,132,.12);color:var(--g)}.li{background:rgba(245,166,35,.12);color:var(--am)}.la{background:rgba(224,64,64,.12);color:var(--rd)}
+.chk{list-style:none;padding:0}
+.chk li{padding:.35rem 0;border-bottom:1px solid var(--br);color:var(--tx2);font-size:14px;display:flex;align-items:center;gap:.75rem}
+.chk li::before{content:'☐';font-size:16px;color:var(--br2)}
+.step-num{font-family:var(--mo);font-size:11px;background:var(--sf);border:1px solid var(--br);color:var(--g);padding:2px 7px;margin-right:.5rem}
+footer{border-top:1px solid var(--br);padding:1.5rem 2rem;background:var(--bg2);font-family:var(--mo);font-size:11px;color:var(--tx3);text-align:center}
+footer a{color:var(--tx3);margin:0 .75rem}footer a:hover{color:var(--g)}
+@media(max-width:700px){.main{padding:1.5rem 1rem}nav{display:none}}
+</style>
+</head><body>
+<header><div class="hi">
+  <a href="index.html" class="logo"><div class="logo-box">400</div>AS/400 LAB</a>
+  <nav><a href="index.html">INÍCIO</a><a href="index.html#modulos">MÓDULOS</a><a href="index.html#labs">LABS</a><a href="index.html#scripts" class="active">SCRIPTS</a></nav>
+</div></header><main class="main">
+<div class="crumb"><a href="index.html">Início</a> › <a href="index.html#scripts">Scripts</a> › Monitoramento</div>
+<h1>Script CLP — Monitoramento do Sistema</h1>
+<p class="subtitle">Gera relatório completo de status do sistema: CPU, jobs ativos, disco, subsistemas e impressoras. Ideal para agendamento diário.</p>
+
+<h2>Como Usar</h2>
+<p><strong>1. Crie o membro fonte</strong> em sua biblioteca de scripts:</p>
+<pre>STRSEU SRCFILE(SCRIPTLIB/QCLSRC) SRCMBR(MONITORA) TYPE(CLP)</pre>
+<p><strong>2. Cole o código abaixo</strong> no editor SEU.</p>
+<p><strong>3. Compile o programa:</strong></p>
+<pre>CRTCLPGM PGM(SCRIPTLIB/MONITORA) SRCFILE(SCRIPTLIB/QCLSRC) SRCMBR(MONITORA)</pre>
+<p><strong>4. Execute manualmente:</strong></p>
+<pre>CALL PGM(SCRIPTLIB/MONITORA)</pre>
+<p><strong>5. Agendar execução diária às 07:00:</strong></p>
+<pre>ADDJOBSCDE JOB(MONITORA) CMD(CALL PGM(SCRIPTLIB/MONITORA)) FRQ(*WEEKLY) SCDDAY(*ALL) SCDTIME('07:00:00')</pre>
+
+<h2>Código-fonte CLP</h2>
+<pre>/*===========================================================*/
+/* MONITORA.CLP — Monitoramento do Sistema AS/400            */
+/* Versão 1.0 — AS/400 Lab                                   */
+/*===========================================================*/
+PGM
+
+DCL VAR(&DATA)     TYPE(*CHAR) LEN(10)
+DCL VAR(&HORA)     TYPE(*CHAR) LEN(8)
+DCL VAR(&SISTEMA)  TYPE(*CHAR) LEN(8)
+DCL VAR(&MSG)      TYPE(*CHAR) LEN(200)
+
+/* Obter data, hora e nome do sistema */
+RTVSYSVAL  SYSVAL(QDATE)    RTNVAR(&DATA)
+RTVSYSVAL  SYSVAL(QTIME)    RTNVAR(&HORA)
+RTVSYSVAL  SYSVAL(QSYSNAME) RTNVAR(&SISTEMA)
+
+/* Notificar início */
+CHGVAR VAR(&MSG) VALUE('==== INICIO MONITORAMENTO: ' *CAT +
+       &SISTEMA *CAT ' - ' *CAT &DATA *CAT ' ' *CAT &HORA *CAT ' ====')
+SNDMSG MSG(&MSG) TOUSR(QSYSOPR) MSGTYPE(*INFO)
+
+/* 1. Status do Sistema (CPU e Memória) */
+SNDMSG MSG('--- 1. STATUS DO SISTEMA ---') TOUSR(QSYSOPR) MSGTYPE(*INFO)
+WRKSYSSTS OUTPUT(*PRINT)
+
+/* 2. Jobs Ativos */
+SNDMSG MSG('--- 2. JOBS ATIVOS ---') TOUSR(QSYSOPR) MSGTYPE(*INFO)
+WRKACTJOB OUTPUT(*PRINT)
+
+/* 3. Status de Disco */
+SNDMSG MSG('--- 3. STATUS DE DISCO ---') TOUSR(QSYSOPR) MSGTYPE(*INFO)
+WRKDSKSTS OUTPUT(*PRINT)
+
+/* 4. Subsistemas Ativos */
+SNDMSG MSG('--- 4. SUBSISTEMAS ---') TOUSR(QSYSOPR) MSGTYPE(*INFO)
+WRKSBS OUTPUT(*PRINT)
+
+/* 5. Filas de Jobs */
+SNDMSG MSG('--- 5. FILAS DE JOBS ---') TOUSR(QSYSOPR) MSGTYPE(*INFO)
+WRKJOBQ OUTPUT(*PRINT)
+
+/* 6. Impressoras e Output Queues */
+SNDMSG MSG('--- 6. IMPRESSORAS ---') TOUSR(QSYSOPR) MSGTYPE(*INFO)
+WRKCFGSTS CFGTYPE(*DEV) CFGD(*PRT) OUTPUT(*PRINT)
+WRKOUTQ OUTPUT(*PRINT)
+
+/* Notificar conclusão */
+RTVSYSVAL  SYSVAL(QTIME) RTNVAR(&HORA)
+CHGVAR VAR(&MSG) VALUE('==== FIM MONITORAMENTO: ' *CAT +
+       &SISTEMA *CAT ' - ' *CAT &DATA *CAT ' ' *CAT &HORA *CAT ' ====')
+SNDMSG MSG(&MSG) TOUSR(QSYSOPR) MSGTYPE(*INFO)
+
+ENDPGM</pre>
+
+<h2>O que o script gera</h2>
+<table><tr><th>Seção</th><th>Comando usado</th><th>O que verifica</th></tr>
+<tr><td>Status do sistema</td><td><code>WRKSYSSTS</code></td><td>CPU%, memória, faults</td></tr>
+<tr><td>Jobs ativos</td><td><code>WRKACTJOB</code></td><td>Todos os jobs em execução</td></tr>
+<tr><td>Disco (ASP)</td><td><code>WRKDSKSTS</code></td><td>Uso de espaço em disco</td></tr>
+<tr><td>Subsistemas</td><td><code>WRKSBS</code></td><td>Status de cada subsistema</td></tr>
+<tr><td>Filas de jobs</td><td><code>WRKJOBQ</code></td><td>Jobs aguardando e filas seguradas</td></tr>
+<tr><td>Impressoras</td><td><code>WRKCFGSTS</code> + <code>WRKOUTQ</code></td><td>Status de devices e spools</td></tr></table>
+
+<div class="info"><strong>Dica:</strong> Todos os relatórios são enviados para o SPOOL do job. Consulte o output após a execução com <code>WRKSPLF</code>.</div>
+<div class="page-nav"><a href="lab-05-manutencao.html">← Lab 05</a><a href="script-limpeza-spool.html">Script: Limpeza de Spool →</a></div>
+</main><footer><a href="index.html">Início</a><a href="index.html#scripts">Scripts</a><a href="https://github.com/seu-usuario/as400-lab">GitHub</a> | AS/400 Lab — MIT 2024</footer>
+<script>
+document.querySelectorAll('pre').forEach(pre=>{
+  const btn=document.createElement('button');
+  btn.className='copy-btn';btn.textContent='COPIAR';
+  btn.onclick=()=>{
+    const txt=[...pre.childNodes].filter(n=>n.nodeType===3||n.tagName!=='BUTTON').map(n=>n.textContent).join('').trim();
+    navigator.clipboard.writeText(txt).then(()=>{btn.textContent='OK ✓';setTimeout(()=>btn.textContent='COPIAR',1500)});
+  };
+  pre.appendChild(btn);
+});
+</script></body></html>

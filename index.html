@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AS/400 Lab — Laboratório de Comandos Técnicos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--g:#00d084;--gd:#00a866;--gk:#007a4a;--am:#f5a623;--rd:#e04040;--bg:#0a0f0d;--bg2:#111a14;--bg3:#162019;--sf:#1a2820;--br:#2a3d30;--br2:#3a5040;--tx:#d4e8d8;--tx2:#7ea88a;--tx3:#4a7055;--mo:'IBM Plex Mono',monospace;--sa:'IBM Plex Sans',sans-serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sa);background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,rgba(0,255,100,.022) 0,transparent 2px,transparent 4px);pointer-events:none;z-index:9999}
+a{color:var(--g);text-decoration:none}
+header{border-bottom:1px solid var(--br);background:var(--bg2);padding:0 2rem;position:sticky;top:0;z-index:100}
+.hi{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:54px}
+.logo{font-family:var(--mo);font-size:13px;font-weight:600;color:var(--g);display:flex;align-items:center;gap:10px}
+.logo-box{width:28px;height:28px;border:1px solid var(--g);display:flex;align-items:center;justify-content:center;font-size:10px}
+nav a{font-family:var(--mo);font-size:11px;color:var(--tx2);margin-left:1.75rem;letter-spacing:.08em}
+nav a:hover{color:var(--g)}
+.ver{font-family:var(--mo);font-size:11px;border:1px solid var(--gk);color:var(--g);padding:2px 8px}
+
+/* hero */
+.hero{max-width:1100px;margin:0 auto;padding:5rem 2rem 3rem}
+.hlabel{font-family:var(--mo);font-size:11px;color:var(--g);letter-spacing:.15em;margin-bottom:1rem}
+h1{font-family:var(--mo);font-size:clamp(30px,5vw,56px);font-weight:600;color:var(--g);line-height:1.08;letter-spacing:-.02em;margin-bottom:1.5rem}
+h1 span{color:var(--tx3)}
+.hdesc{font-size:16px;color:var(--tx2);line-height:1.75;max-width:580px;margin-bottom:2.5rem}
+.btns{display:flex;gap:1rem;flex-wrap:wrap}
+.btn{font-family:var(--mo);font-size:12px;font-weight:600;letter-spacing:.05em;padding:10px 22px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;border:none;transition:all .15s}
+.btn-p{background:var(--g);color:var(--bg)}.btn-p:hover{background:var(--gd)}
+.btn-o{background:transparent;color:var(--tx);border:1px solid var(--br2)}.btn-o:hover{border-color:var(--g);color:var(--g)}
+
+/* stats */
+.stats{max-width:1100px;margin:0 auto;padding:0 2rem 3.5rem;display:flex;gap:2.5rem;flex-wrap:wrap}
+.stat{padding-right:2.5rem;border-right:1px solid var(--br)}.stat:last-child{border:none}
+.snum{font-family:var(--mo);font-size:30px;font-weight:600;color:var(--g);line-height:1}
+.slbl{font-size:11px;color:var(--tx3);letter-spacing:.06em;margin-top:3px}
+
+/* terminal */
+.term-sec{background:var(--bg2);border-top:1px solid var(--br);border-bottom:1px solid var(--br);padding:3rem 2rem}
+.ti{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center}
+.tinfo h2{font-family:var(--mo);font-size:20px;font-weight:600;color:var(--tx);margin-bottom:1rem}
+.tinfo p{font-size:15px;color:var(--tx2);line-height:1.7;margin-bottom:1.2rem}
+.twin{background:#050a07;border:1px solid var(--br);overflow:hidden}
+.tbar{background:var(--sf);padding:8px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--br)}
+.dot{width:10px;height:10px;border-radius:50%}
+.dr{background:#e04040}.dy{background:#f5a623}.dg{background:var(--g)}
+.ttl{font-family:var(--mo);font-size:11px;color:var(--tx3);margin-left:4px;letter-spacing:.08em}
+.tbody{padding:1.25rem 1.5rem;font-family:var(--mo);font-size:13px;line-height:2;min-height:260px}
+.tp{color:var(--g)}.tc{color:#fff}.to{color:var(--tx2)}.th{color:var(--am)}.te{color:var(--rd)}.tcm{color:var(--tx3)}
+.cur{display:inline-block;width:8px;height:14px;background:var(--g);vertical-align:middle;animation:blink 1s step-end infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* modules */
+.sec{max-width:1100px;margin:0 auto;padding:4rem 2rem}
+.shead{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:2rem;border-bottom:1px solid var(--br);padding-bottom:.75rem}
+.stitle{font-family:var(--mo);font-size:12px;color:var(--tx2);letter-spacing:.1em}
+.scnt{font-family:var(--mo);font-size:11px;color:var(--tx3)}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1px;background:var(--br);border:1px solid var(--br)}
+.mcard{background:var(--bg);padding:1.4rem;transition:background .15s;cursor:default}
+.mcard:hover{background:var(--bg3)}
+.mcard a{color:inherit;display:block;text-decoration:none}
+.mcard a:hover .mtitle{color:var(--g)}
+.mtop{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem}
+.mnum{font-family:var(--mo);font-size:11px;color:var(--tx3);letter-spacing:.1em}
+.lbadge{font-family:var(--mo);font-size:10px;padding:2px 8px;font-weight:600}
+.lb{background:rgba(0,208,132,.12);color:var(--g)}.li{background:rgba(245,166,35,.12);color:var(--am)}.la{background:rgba(224,64,64,.12);color:var(--rd)}
+.mtitle{font-family:var(--mo);font-size:14px;font-weight:600;color:var(--tx);margin-bottom:.4rem;transition:color .15s}
+.mdesc{font-size:13px;color:var(--tx2);line-height:1.6}
+.mtags{margin-top:.85rem;display:flex;gap:5px;flex-wrap:wrap}
+.tag{font-family:var(--mo);font-size:10px;color:var(--tx3);border:1px solid var(--br);padding:2px 6px}
+
+/* search */
+.srch-sec{background:var(--bg2);border-top:1px solid var(--br);border-bottom:1px solid var(--br);padding:3rem 2rem}
+.srch-i{max-width:1100px;margin:0 auto}
+.sbar{display:flex;border:1px solid var(--br2);margin-bottom:1.5rem}
+.spfx{font-family:var(--mo);font-size:14px;color:var(--g);background:var(--sf);padding:10px 14px;border-right:1px solid var(--br);user-select:none}
+#cs{flex:1;background:transparent;border:none;outline:none;font-family:var(--mo);font-size:13px;color:var(--tx);padding:10px 14px}
+#cs::placeholder{color:var(--tx3)}
+.cres{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;background:var(--br);border:1px solid var(--br);max-height:420px;overflow-y:auto}
+.ci{background:var(--bg);padding:.9rem 1.1rem}
+.cname{font-family:var(--mo);font-size:14px;font-weight:600;color:var(--g);margin-bottom:3px}
+.cdesc{font-size:12px;color:var(--tx2);line-height:1.5;margin-bottom:5px}
+.cex{font-family:var(--mo);font-size:11px;color:var(--tx3);background:var(--bg3);padding:3px 8px;border-left:2px solid var(--gk);word-break:break-all}
+.ccat{font-family:var(--mo);font-size:10px;color:var(--tx3);border:1px solid var(--br);padding:2px 7px;margin-top:5px;display:inline-block}
+
+/* labs */
+.llist{display:flex;flex-direction:column;gap:1px;background:var(--br);border:1px solid var(--br)}
+.lrow{background:var(--bg);padding:1.2rem 1.5rem;display:flex;align-items:center;gap:1.5rem;transition:background .15s}
+.lrow:hover{background:var(--bg3)}
+.lrow a{display:contents;color:inherit;text-decoration:none}
+.lrow:hover .ltitle{color:var(--g)}
+.lnum{font-family:var(--mo);font-size:22px;font-weight:600;color:var(--br2);min-width:3rem}
+.linfo{flex:1}
+.ltitle{font-family:var(--mo);font-size:14px;font-weight:600;color:var(--tx);margin-bottom:3px;transition:color .15s}
+.ldesc{font-size:13px;color:var(--tx2)}
+.lmeta{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.ltime{font-family:var(--mo);font-size:11px;color:var(--tx3)}
+
+/* scripts links */
+.slinks{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem;margin-top:1.5rem}
+.slink{background:var(--bg);border:1px solid var(--br);padding:1.4rem;transition:border-color .15s}
+.slink:hover{border-color:var(--br2)}
+.slink a{text-decoration:none}
+.slink:hover .slname{color:var(--g)}
+.slico{font-family:var(--mo);font-size:10px;color:var(--g);letter-spacing:.1em;margin-bottom:.6rem}
+.slname{font-family:var(--mo);font-size:15px;font-weight:600;color:var(--tx);margin-bottom:.4rem;transition:color .15s}
+.sldesc{font-size:13px;color:var(--tx2);line-height:1.6;margin-bottom:.8rem}
+.slusage{font-family:var(--mo);font-size:11px;color:var(--gd);background:var(--bg3);padding:5px 10px;border-left:2px solid var(--gk)}
+
+footer{border-top:1px solid var(--br);padding:1.75rem 2rem;background:var(--bg2);font-family:var(--mo);font-size:11px;color:var(--tx3);text-align:center}
+footer a{color:var(--tx3);margin:0 .75rem}footer a:hover{color:var(--g)}
+@media(max-width:768px){.ti{grid-template-columns:1fr}nav{display:none}.stats{gap:1.5rem}}
+</style>
+</head>
+<body>
+<header>
+  <div class="hi">
+    <div class="logo"><div class="logo-box">400</div>AS/400 LAB</div>
+    <nav>
+      <a href="#modulos">MÓDULOS</a>
+      <a href="#comandos">COMANDOS</a>
+      <a href="#labs">LABORATÓRIOS</a>
+      <a href="#scripts">SCRIPTS</a>
+    </nav>
+    <span class="ver">v1.0.0</span>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hlabel">▶ LABORATÓRIO TÉCNICO IBM AS/400 / iSeries / IBM i</div>
+  <h1>Comandos.<br><span>Operação.</span><br>Manutenção.</h1>
+  <p class="hdesc">Referência prática de comandos CL para operadores e técnicos do IBM AS/400. Da sessão interativa ao backup completo do sistema.</p>
+  <div class="btns">
+    <a href="https://github.com/seu-usuario/as400-lab" class="btn btn-p">⬡ Ver no GitHub</a>
+    <a href="#comandos" class="btn btn-o">→ Buscar Comandos</a>
+  </div>
+</section>
+
+<div class="stats">
+  <div class="stat"><div class="snum">11</div><div class="slbl">MÓDULOS</div></div>
+  <div class="stat"><div class="snum">5</div><div class="slbl">LABORATÓRIOS</div></div>
+  <div class="stat"><div class="snum">150+</div><div class="slbl">COMANDOS CL</div></div>
+  <div class="stat"><div class="snum">3</div><div class="slbl">SCRIPTS CLP</div></div>
+</div>
+
+<section class="term-sec">
+  <div class="ti">
+    <div class="tinfo">
+      <h2>Referência direta,<br>sem enrolação.</h2>
+      <p>Cada módulo documenta os comandos essenciais para operação e manutenção do AS/400, com exemplos reais e notas de risco.</p>
+      <p>Scripts CLP prontos para compilar e usar em rotinas de monitoramento, spool e backup.</p>
+      <a href="#modulos" class="btn btn-o" style="width:fit-content">Ver todos os módulos →</a>
+    </div>
+    <div class="twin">
+      <div class="tbar"><div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div><span class="ttl">QCMD — AS400SRV — OPERADOR</span></div>
+      <div class="tbody" id="tb"></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="modulos">
+  <div class="shead"><span class="stitle">MÓDULOS DE ESTUDO</span><span class="scnt">11 módulos · básico ao avançado</span></div>
+  <div class="mgrid" id="mg"></div>
+</section>
+
+<section class="srch-sec" id="comandos">
+  <div class="srch-i">
+    <div class="shead" style="border-bottom:1px solid var(--br);padding-bottom:.75rem;margin-bottom:1.5rem"><span class="stitle">BUSCA RÁPIDA DE COMANDOS</span><span class="scnt">50+ comandos documentados</span></div>
+    <div class="sbar"><span class="spfx">===></span><input id="cs" placeholder="Ex: WRKACTJOB, backup, usuário, jobs..." autocomplete="off" spellcheck="false"/></div>
+    <div class="cres" id="cr"></div>
+  </div>
+</section>
+
+<section class="sec" id="labs">
+  <div class="shead"><span class="stitle">LABORATÓRIOS PRÁTICOS</span><span class="scnt">5 laboratórios progressivos</span></div>
+  <div class="llist" id="ll"></div>
+</section>
+
+<section class="sec" id="scripts" style="background:var(--bg2);max-width:100%;padding:3rem 2rem;border-top:1px solid var(--br)">
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="shead"><span class="stitle">SCRIPTS CLP</span><span class="scnt">prontos para compilar e usar</span></div>
+    <div class="slinks" id="sl"></div>
+  </div>
+</section>
+
+<footer>
+  <a href="https://github.com/seu-usuario/as400-lab">GitHub</a>
+  <a href="contributing.html">Contribuir</a>
+  <span style="color:var(--br2)">|</span>
+  AS/400 Lab — MIT License — 2024
+</footer>
+
+<script>
+const MODS=[
+  {n:'01',t:'Introdução ao AS/400',lv:'b',desc:'Conceitos fundamentais, objetos, bibliotecas e primeiros comandos do sistema.',tags:['DSPSYSVAL','DSPJOB','SIGNOFF'],f:'mod-01-introducao.html'},
+  {n:'02',t:'Navegação e Menus',lv:'b',desc:'Menus do sistema, atalhos de teclado e navegação por telas 5250.',tags:['GO MAIN','SYSREQ','F4'],f:'mod-02-navegacao.html'},
+  {n:'03',t:'Gerenciamento de Jobs',lv:'i',desc:'Monitoramento, controle e agendamento de jobs batch e interativos.',tags:['WRKACTJOB','SBMJOB','ENDJOB'],f:'mod-03-jobs.html'},
+  {n:'04',t:'Usuários e Segurança',lv:'i',desc:'Perfis, senhas, autoridades sobre objetos e auditoria de segurança.',tags:['WRKUSRPRF','GRTOBJAUT','DSPOBJAUT'],f:'mod-04-usuarios.html'},
+  {n:'05',t:'Bibliotecas e Objetos',lv:'i',desc:'Criação, cópia, movimentação e gerenciamento de objetos e bibliotecas.',tags:['CRTLIB','CPYF','WRKOBJ'],f:'mod-05-objetos.html'},
+  {n:'06',t:'Mensagens e Filas',lv:'b',desc:'Sistema de mensagens, filas de mensagens e diagnóstico por logs.',tags:['DSPMSG','SNDMSG','DSPLOG'],f:'mod-06-mensagens.html'},
+  {n:'07',t:'Subsistemas',lv:'i',desc:'Controle de subsistemas, pools de memória e procedimentos de IPL.',tags:['WRKSBS','STRSBS','ENDSBS'],f:'mod-07-subsistemas.html'},
+  {n:'08',t:'Spool e Impressão',lv:'b',desc:'Gerenciamento de arquivos de spool, output queues e writers de impressão.',tags:['WRKSPLF','CLROUTQ','STRPRTWTR'],f:'mod-08-spool.html'},
+  {n:'09',t:'Backup e Restauração',lv:'a',desc:'SAVE/RESTORE, Save Files, journaling e recuperação de dados.',tags:['SAVLIB','RSTLIB','STRJRNPF'],f:'mod-09-backup.html'},
+  {n:'10',t:'Performance',lv:'i',desc:'Monitoramento de CPU, memória, disco e diagnóstico de locks.',tags:['WRKSYSSTS','WRKDSKSTS','WRKOBJLCK'],f:'mod-10-performance.html'},
+  {n:'11',t:'Redes e Comunicação',lv:'i',desc:'TCP/IP, FTP, status de linhas e diagnóstico de conectividade.',tags:['NETSTAT','PING','STRTCP'],f:'mod-11-redes.html'},
+];
+const LV={b:{l:'BÁSICO',c:'lb'},i:{l:'INTERMEDIÁRIO',c:'li'},a:{l:'AVANÇADO',c:'la'}};
+document.getElementById('mg').innerHTML=MODS.map(m=>`<div class="mcard"><a href="${m.f}"><div class="mtop"><span class="mnum">MOD-${m.n}</span><span class="lbadge ${LV[m.lv].c}">${LV[m.lv].l}</span></div><div class="mtitle">${m.t}</div><div class="mdesc">${m.desc}</div><div class="mtags">${m.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div></a></div>`).join('');
+
+const LABS=[
+  {n:'01',t:'Comandos Básicos',lv:'b',desc:'Navegação, variáveis de sistema, lista de bibliotecas e mensagens.',time:'30–45 min',f:'lab-01-basico.html'},
+  {n:'02',t:'Gerenciamento de Jobs',lv:'i',desc:'Submissão de jobs, controle de filas, job log e agendamento.',time:'45–60 min',f:'lab-02-jobs.html'},
+  {n:'03',t:'Usuários e Segurança',lv:'i',desc:'Criação de usuários, bloqueio/desbloqueio, autoridades em objetos.',time:'45–60 min',f:'lab-03-usuarios.html'},
+  {n:'04',t:'Objetos e Bibliotecas',lv:'i',desc:'Criação, cópia, movimentação, backup e restauração de objetos.',time:'45–60 min',f:'lab-04-objetos.html'},
+  {n:'05',t:'Manutenção do Sistema',lv:'a',desc:'Performance, spool, log do sistema e checklist de manutenção preventiva.',time:'60–90 min',f:'lab-05-manutencao.html'},
+];
+document.getElementById('ll').innerHTML=LABS.map(l=>`<div class="lrow"><a href="${l.f}"><div class="lnum">${l.n}</div><div class="linfo"><div class="ltitle">${l.t}</div><div class="ldesc">${l.desc}</div></div><div class="lmeta"><span class="lbadge ${LV[l.lv].c}">${LV[l.lv].l}</span><span class="ltime">${l.time}</span></div></a></div>`).join('');
+
+const SCRIPTS=[
+  {ico:'SCRIPT · CLP',n:'script-monitoramento.html',lbl:'monitoramento.clp',desc:'Relatório completo de status: CPU, jobs, disco, subsistemas e impressoras.',u:'CALL PGM(SCRIPTLIB/MONITORA)'},
+  {ico:'SCRIPT · CLP',n:'script-limpeza-spool.html',lbl:'limpeza-spool.clp',desc:'Remove arquivos de spool expirados e limpa output queues configuradas.',u:'CALL PGM(SCRIPTLIB/LIMPSPOOL)'},
+  {ico:'SCRIPT · CLP',n:'script-backup-biblioteca.html',lbl:'backup-biblioteca.clp',desc:'Backup parametrizado de biblioteca para Save File com nome automático por data.',u:"CALL PGM(SCRIPTLIB/BKPLIB) PARM('PRODLIB' 'BKPLIB')"},
+];
+document.getElementById('sl').innerHTML=SCRIPTS.map(s=>`<div class="slink"><a href="${s.n}"><div class="slico">${s.ico}</div><div class="slname">${s.lbl}</div><div class="sldesc">${s.desc}</div><div class="slusage">${s.u}</div></a></div>`).join('');
+
+const CMDS=[
+  {nm:'WRKACTJOB',ct:'jobs',d:'Lista todos os jobs ativos no sistema com status e CPU%',ex:'WRKACTJOB SBS(*ALL)'},
+  {nm:'SBMJOB',ct:'jobs',d:'Submete um job para execução em batch',ex:'SBMJOB CMD(CALL PGM(LIB/PGM)) JOBQ(QBATCH)'},
+  {nm:'ENDJOB',ct:'jobs',d:'Encerra job — use *CNTRLD para encerramento seguro',ex:'ENDJOB JOB(num/usr/nome) OPTION(*CNTRLD)'},
+  {nm:'HLDJOB',ct:'jobs',d:'Pausa (hold) a execução de um job',ex:'HLDJOB JOB(num/usr/nome)'},
+  {nm:'RLSJOB',ct:'jobs',d:'Libera um job pausado para continuar',ex:'RLSJOB JOB(num/usr/nome)'},
+  {nm:'DSPJOBLOG',ct:'jobs',d:'Exibe o log de mensagens do job atual ou de job específico',ex:'DSPJOBLOG'},
+  {nm:'ADDJOBSCDE',ct:'jobs',d:'Agenda um job para execução periódica',ex:"ADDJOBSCDE JOB(x) CMD(y) FRQ(*DAILY) SCDTIME('22:00:00')"},
+  {nm:'WRKJOBQ',ct:'jobs',d:'Exibe e gerencia jobs nas filas de execução',ex:'WRKJOBQ JOBQ(QBATCH)'},
+  {nm:'WRKUSRPRF',ct:'usuarios',d:'Lista e gerencia perfis de usuários do sistema',ex:'WRKUSRPRF USRPRF(*ALL)'},
+  {nm:'CRTUSRPRF',ct:'usuarios',d:'Cria novo perfil de usuário',ex:'CRTUSRPRF USRPRF(xxx) PASSWORD(yyy) USRCLS(*USER)'},
+  {nm:'CHGUSRPRF',ct:'usuarios',d:'Altera atributos de um perfil de usuário',ex:'CHGUSRPRF USRPRF(xxx) STATUS(*DISABLED)'},
+  {nm:'DLTUSRPRF',ct:'usuarios',d:'Exclui perfil de usuário do sistema',ex:'DLTUSRPRF USRPRF(xxx) OWNOBJOPT(*NODLT)'},
+  {nm:'GRTOBJAUT',ct:'usuarios',d:'Concede autoridade a usuário sobre objeto',ex:'GRTOBJAUT OBJ(lib/arq) OBJTYPE(*FILE) USER(xxx) AUT(*USE)'},
+  {nm:'DSPOBJAUT',ct:'usuarios',d:'Exibe quem tem autoridade sobre um objeto',ex:'DSPOBJAUT OBJ(lib/arq) OBJTYPE(*FILE)'},
+  {nm:'RVKOBJAUT',ct:'usuarios',d:'Revoga autoridade de usuário sobre objeto',ex:'RVKOBJAUT OBJ(lib/arq) OBJTYPE(*FILE) USER(xxx)'},
+  {nm:'WRKLIB',ct:'objetos',d:'Lista e gerencia bibliotecas do sistema',ex:'WRKLIB LIB(PROD*)'},
+  {nm:'CRTLIB',ct:'objetos',d:'Cria nova biblioteca',ex:"CRTLIB LIB(xxx) TYPE(*PROD) TEXT('descricao')"},
+  {nm:'DLTLIB',ct:'objetos',d:'⚠ Exclui biblioteca e TODO seu conteúdo',ex:'DLTLIB LIB(xxx)'},
+  {nm:'WRKOBJ',ct:'objetos',d:'Lista objetos em biblioteca com filtro por tipo',ex:'WRKOBJ OBJ(lib/*ALL) OBJTYPE(*FILE)'},
+  {nm:'CPYF',ct:'objetos',d:'Copia arquivo físico entre bibliotecas',ex:'CPYF FROMFILE(lib/orig) TOFILE(lib/dest) CRTFILE(*YES)'},
+  {nm:'DSPPFM',ct:'objetos',d:'Exibe registros de um arquivo físico',ex:'DSPPFM FILE(lib/arq)'},
+  {nm:'CLRPFM',ct:'objetos',d:'⚠ Apaga TODOS os registros de arquivo físico',ex:'CLRPFM FILE(lib/arq)'},
+  {nm:'SAVLIB',ct:'backup',d:'Salva biblioteca completa em fita ou Save File',ex:'SAVLIB LIB(xxx) DEV(*SAVF) SAVF(lib/bkp)'},
+  {nm:'RSTLIB',ct:'backup',d:'Restaura biblioteca a partir de backup',ex:'RSTLIB SAVLIB(xxx) DEV(*SAVF) SAVF(lib/bkp)'},
+  {nm:'CRTSAVF',ct:'backup',d:'Cria arquivo de backup em disco (Save File)',ex:"CRTSAVF FILE(lib/bkp) TEXT('backup')"},
+  {nm:'DSPSAVF',ct:'backup',d:'Exibe conteúdo de um Save File',ex:'DSPSAVF FILE(lib/bkp)'},
+  {nm:'SAVSYS',ct:'backup',d:'Salva sistema operacional completo (modo restrito)',ex:'SAVSYS DEV(TAP01)'},
+  {nm:'STRJRNPF',ct:'backup',d:'Inicia journaling em arquivo físico',ex:'STRJRNPF FILE(lib/arq) JRN(lib/jrn)'},
+  {nm:'WRKSYSSTS',ct:'perf',d:'Status de CPU, memória e paginação em tempo real',ex:'WRKSYSSTS'},
+  {nm:'WRKDSKSTS',ct:'perf',d:'Status e uso de disco (ASP)',ex:'WRKDSKSTS'},
+  {nm:'WRKOBJLCK',ct:'perf',d:'Exibe locks ativos sobre objeto específico',ex:'WRKOBJLCK OBJ(lib/arq) OBJTYPE(*FILE)'},
+  {nm:'DSPLOG',ct:'perf',d:'Exibe log histórico de mensagens do sistema',ex:'DSPLOG LOG(QHST)'},
+  {nm:'DSPPTF',ct:'perf',d:'Exibe PTFs (patches) instaladas',ex:'DSPPTF LICPGM(*ALL)'},
+  {nm:'WRKSPLF',ct:'spool',d:'Lista arquivos de spool do usuário ou todos',ex:'WRKSPLF SELECT(*ALL)'},
+  {nm:'WRKOUTQ',ct:'spool',d:'Lista e gerencia output queues de impressão',ex:'WRKOUTQ OUTQ(QPRINT)'},
+  {nm:'CLROUTQ',ct:'spool',d:'⚠ Remove todos os spools de uma output queue',ex:'CLROUTQ OUTQ(QPRINT)'},
+  {nm:'STRPRTWTR',ct:'spool',d:'Inicia writer de impressora',ex:'STRPRTWTR DEV(IMPR01)'},
+  {nm:'ENDWTR',ct:'spool',d:'Encerra writer de impressão de forma controlada',ex:'ENDWTR WTR(IMPR01) OPTION(*CNTRLD)'},
+  {nm:'NETSTAT',ct:'rede',d:'Status de interfaces, rotas e conexões TCP/IP',ex:'NETSTAT OPTION(*IFC)'},
+  {nm:'PING',ct:'rede',d:'Testa conectividade TCP/IP com host remoto',ex:"PING RMTSYS('192.168.1.1')"},
+  {nm:'STRTCP',ct:'rede',d:'Inicia todos os serviços TCP/IP',ex:'STRTCP'},
+  {nm:'STRTCPSVR',ct:'rede',d:'Inicia serviço TCP/IP específico',ex:'STRTCPSVR SERVER(*FTP)'},
+  {nm:'VRYCFG',ct:'rede',d:'Varia linha ou dispositivo online/offline',ex:'VRYCFG CFGOBJ(LIN1) CFGTYPE(*LIN) STATUS(*ON)'},
+  {nm:'WRKSBS',ct:'sbs',d:'Lista e gerencia subsistemas ativos',ex:'WRKSBS'},
+  {nm:'STRSBS',ct:'sbs',d:'Inicia um subsistema',ex:'STRSBS SBSD(QBATCH)'},
+  {nm:'ENDSBS',ct:'sbs',d:'Encerra subsistema — use *CNTRLD para encerramento seguro',ex:'ENDSBS SBS(xxx) OPTION(*CNTRLD) DELAY(300)'},
+  {nm:'PWRDWNSYS',ct:'sbs',d:'⚠ Encerra e reinicia o sistema (IPL)',ex:'PWRDWNSYS OPTION(*CNTRLD) RESTART(*YES)'},
+  {nm:'DSPMSG',ct:'msg',d:'Exibe mensagens da fila pessoal ou especificada',ex:'DSPMSG MSGQ(QSYSOPR)'},
+  {nm:'SNDMSG',ct:'msg',d:'Envia mensagem para usuário ou fila',ex:"SNDMSG MSG('texto') TOUSR(xxx)"},
+  {nm:'DSPSYSVAL',ct:'sistema',d:'Exibe variável de sistema (configurações)',ex:'DSPSYSVAL SYSVAL(QDATE)'},
+  {nm:'CHGSYSVAL',ct:'sistema',d:'Altera variável de sistema',ex:'CHGSYSVAL SYSVAL(QPWDMINLEN) VALUE(8)'},
+  {nm:'DSPJOB',ct:'sistema',d:'Exibe atributos e informações do job atual',ex:'DSPJOB'},
+  {nm:'ADDLIBLE',ct:'sistema',d:'Adiciona biblioteca à lista de bibliotecas do usuário',ex:'ADDLIBLE LIB(xxx)'},
+  {nm:'DSPLIBL',ct:'sistema',d:'Exibe a lista de bibliotecas ativa',ex:'DSPLIBL'},
+];
+function renderCmds(list){
+  document.getElementById('cr').innerHTML=list.length
+    ?list.map(c=>`<div class="ci"><div class="cname">${c.nm}</div><div class="cdesc">${c.d}</div><div class="cex">${c.ex}</div><span class="ccat">${c.ct.toUpperCase()}</span></div>`).join('')
+    :'<div class="ci"><div class="cdesc" style="color:var(--tx3)">Nenhum comando encontrado.</div></div>';
+}
+renderCmds(CMDS.slice(0,15));
+document.getElementById('cs').addEventListener('input',function(){
+  const q=this.value.toLowerCase().trim();
+  renderCmds(q?CMDS.filter(c=>c.nm.toLowerCase().includes(q)||c.d.toLowerCase().includes(q)||c.ct.includes(q)||c.ex.toLowerCase().includes(q)):CMDS.slice(0,15));
+});
+
+// terminal animation
+const TL=[
+  {d:0,h:'<div><span class="tp">===></span> <span class="tc">WRKACTJOB</span></div>'},
+  {d:700,h:'<div class="to">&nbsp;&nbsp;&nbsp;Work with Active Jobs &nbsp;&nbsp;AS400SRV</div>'},
+  {d:800,h:'<div class="to">&nbsp;CPU %: <span class="th">28.4</span>&nbsp;&nbsp;Jobs ativos: <span class="th">51</span></div>'},
+  {d:900,h:'<div class="to">&nbsp;</div>'},
+  {d:1000,h:'<div class="to">&nbsp;Opt &nbsp;Job &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;User &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CPU%&nbsp;STS</div>'},
+  {d:1100,h:'<div class="to">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;QSYSCOMM &nbsp;&nbsp;QSYS &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.0 &nbsp;DEQW</div>'},
+  {d:1200,h:'<div class="to">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;QPADEV0001&nbsp;OPERADOR &nbsp;&nbsp;1.2 &nbsp;RUN</div>'},
+  {d:1300,h:'<div class="to">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BATCNOITE &nbsp;PRODUCAO &nbsp;&nbsp;<span class="te">91.3</span>&nbsp;RUN</div>'},
+  {d:1400,h:'<div class="to">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RELATORIO &nbsp;MARIA &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.0 &nbsp;<span class="th">MSGW</span></div>'},
+  {d:2100,h:'<div><span class="tp">===></span> <span class="tc">ENDJOB JOB(BATCNOITE) OPTION(*CNTRLD)</span></div>'},
+  {d:3000,h:'<div class="tcm">&nbsp;/* Job encerrado com sucesso */</div>'},
+  {d:3600,h:'<div><span class="tp">===></span> <span class="cur"></span></div>'},
+];
+function runTerm(){
+  const b=document.getElementById('tb');b.innerHTML='';
+  TL.forEach(l=>setTimeout(()=>{
+    const last=b.querySelector('.cur');if(last)last.closest('div').remove();
+    b.insertAdjacentHTML('beforeend',l.h);b.scrollTop=b.scrollHeight;
+  },l.d));
+}
+runTerm();setInterval(runTerm,8000);
+</script>
+</body>
+</html>

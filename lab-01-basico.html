@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Lab 01 — Comandos Básicos — AS/400 Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--g:#00d084;--gd:#00a866;--gk:#007a4a;--am:#f5a623;--rd:#e04040;--bg:#0a0f0d;--bg2:#111a14;--bg3:#162019;--sf:#1a2820;--br:#2a3d30;--br2:#3a5040;--tx:#d4e8d8;--tx2:#7ea88a;--tx3:#4a7055;--mo:'IBM Plex Mono',monospace;--sa:'IBM Plex Sans',sans-serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sa);background:var(--bg);color:var(--tx);min-height:100vh}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,rgba(0,255,100,.022) 0,transparent 2px,transparent 4px);pointer-events:none;z-index:9999}
+a{color:var(--g);text-decoration:none}a:hover{color:var(--gd)}
+header{border-bottom:1px solid var(--br);background:var(--bg2);padding:0 2rem;position:sticky;top:0;z-index:100}
+.hi{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:52px}
+.logo{font-family:var(--mo);font-size:13px;font-weight:600;color:var(--g);display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-box{width:26px;height:26px;border:1px solid var(--g);display:flex;align-items:center;justify-content:center;font-size:10px}
+nav{display:flex;gap:1.5rem}
+nav a{font-family:var(--mo);font-size:11px;color:var(--tx2);letter-spacing:.08em}
+nav a:hover,nav a.active{color:var(--g)}
+.main{max-width:860px;margin:0 auto;padding:2.5rem 2rem 4rem}
+.crumb{font-family:var(--mo);font-size:11px;color:var(--tx3);margin-bottom:1.75rem;display:flex;gap:.4rem;align-items:center}
+.crumb a{color:var(--tx3)}.crumb a:hover{color:var(--g)}
+h1{font-family:var(--mo);font-size:clamp(20px,3.5vw,32px);font-weight:600;color:var(--g);line-height:1.15;margin-bottom:.5rem}
+.subtitle{font-size:15px;color:var(--tx2);margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--br)}
+h2{font-family:var(--mo);font-size:16px;font-weight:600;color:var(--tx);margin:2.5rem 0 .85rem;padding-bottom:.4rem;border-bottom:1px solid var(--br)}
+h3{font-family:var(--mo);font-size:13px;font-weight:600;color:var(--am);margin:1.5rem 0 .5rem}
+p{font-size:15px;color:var(--tx2);line-height:1.75;margin-bottom:.9rem}
+ul,ol{padding-left:1.4rem;color:var(--tx2);font-size:15px;line-height:1.85;margin-bottom:1rem}
+li{margin-bottom:.15rem}
+strong{color:var(--tx);font-weight:600}
+code{font-family:var(--mo);font-size:12px;background:var(--bg3);border:1px solid var(--br);color:var(--g);padding:1px 6px}
+pre{font-family:var(--mo);font-size:13px;background:#050a07;border:1px solid var(--br);color:var(--tx);padding:1.2rem 1.4rem 1.2rem 1.4rem;overflow-x:auto;line-height:1.9;margin:.6rem 0 1.2rem;position:relative;border-left:3px solid var(--gk)}
+.copy-btn{position:absolute;top:7px;right:8px;font-family:var(--mo);font-size:10px;background:var(--sf);border:1px solid var(--br2);color:var(--tx2);padding:3px 8px;cursor:pointer;letter-spacing:.05em}
+.copy-btn:hover{color:var(--g);border-color:var(--g)}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:1rem 0 1.5rem}
+th{font-family:var(--mo);font-size:11px;font-weight:600;color:var(--tx3);letter-spacing:.08em;text-align:left;padding:8px 12px;border-bottom:1px solid var(--br);background:var(--bg2)}
+td{padding:8px 12px;border-bottom:1px solid var(--br);color:var(--tx2);vertical-align:top}
+td code{font-size:12px}
+tr:hover td{background:var(--bg3)}
+.warn{background:rgba(224,64,64,.08);border-left:3px solid var(--rd);padding:.75rem 1rem;font-size:14px;color:var(--tx2);margin:1rem 0;line-height:1.6}
+.warn strong{color:var(--rd)}
+.info{background:rgba(0,208,132,.07);border-left:3px solid var(--gk);padding:.75rem 1rem;font-size:14px;color:var(--tx2);margin:1rem 0;line-height:1.6}
+.page-nav{display:flex;justify-content:space-between;margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--br);flex-wrap:wrap;gap:1rem}
+.page-nav a{font-family:var(--mo);font-size:12px;color:var(--tx2);padding:8px 14px;border:1px solid var(--br);transition:all .15s}
+.page-nav a:hover{color:var(--g);border-color:var(--g);text-decoration:none}
+.lbadge{font-family:var(--mo);font-size:10px;padding:2px 8px;font-weight:600;margin-left:.75rem}
+.lb{background:rgba(0,208,132,.12);color:var(--g)}.li{background:rgba(245,166,35,.12);color:var(--am)}.la{background:rgba(224,64,64,.12);color:var(--rd)}
+.chk{list-style:none;padding:0}
+.chk li{padding:.35rem 0;border-bottom:1px solid var(--br);color:var(--tx2);font-size:14px;display:flex;align-items:center;gap:.75rem}
+.chk li::before{content:'☐';font-size:16px;color:var(--br2)}
+.step-num{font-family:var(--mo);font-size:11px;background:var(--sf);border:1px solid var(--br);color:var(--g);padding:2px 7px;margin-right:.5rem}
+footer{border-top:1px solid var(--br);padding:1.5rem 2rem;background:var(--bg2);font-family:var(--mo);font-size:11px;color:var(--tx3);text-align:center}
+footer a{color:var(--tx3);margin:0 .75rem}footer a:hover{color:var(--g)}
+@media(max-width:700px){.main{padding:1.5rem 1rem}nav{display:none}}
+</style>
+</head><body>
+<header><div class="hi">
+  <a href="index.html" class="logo"><div class="logo-box">400</div>AS/400 LAB</a>
+  <nav><a href="index.html">INÍCIO</a><a href="index.html#modulos">MÓDULOS</a><a href="index.html#labs" class="active">LABS</a><a href="index.html#scripts">SCRIPTS</a></nav>
+</div></header><main class="main">
+<div class="crumb"><a href="index.html">Início</a> › <a href="index.html#labs">Laboratórios</a> › Lab 01</div>
+<h1>Lab 01 — Comandos Básicos <span class="lbadge lb">BÁSICO</span></h1>
+<p class="subtitle">Duração estimada: 30–45 min &nbsp;|&nbsp; Pré-requisito: Acesso ao sistema com perfil de usuário ativo</p>
+
+<h2>Objetivos</h2>
+<ul><li>Navegar no sistema e usar ajuda contextual</li><li>Consultar variáveis de sistema</li><li>Gerenciar sua lista de bibliotecas</li><li>Enviar e receber mensagens</li></ul>
+
+<h2>Exercício 1.1 — Reconhecendo o Ambiente</h2>
+<p><span class="step-num">1</span>Verifique quem você é e em qual job está executando:</p>
+<pre>DSPJOB</pre>
+<p>📝 Anote: Qual é o nome do seu job? Qual subsistema está ativo?</p>
+<p><span class="step-num">2</span>Verifique a data e hora do sistema:</p>
+<pre>DSPSYSVAL SYSVAL(QDATE)
+DSPSYSVAL SYSVAL(QTIME)</pre>
+<p>📝 A hora do sistema está correta para seu fuso horário?</p>
+<p><span class="step-num">3</span>Verifique o nome do sistema e modelo:</p>
+<pre>DSPSYSVAL SYSVAL(QSYSNAME)
+DSPSYSVAL SYSVAL(QMODEL)</pre>
+
+<h2>Exercício 1.2 — Usando o F4 (Prompt)</h2>
+<p><span class="step-num">4</span>Digite o comando abaixo e pressione <code>F4</code> antes de Enter:</p>
+<pre>WRKLIB</pre>
+<ul><li>Observe todos os parâmetros disponíveis</li><li>Preencha o campo <strong>Library</strong> com <code>Q*</code></li><li>Pressione Enter</li></ul>
+<p>📝 Quantas bibliotecas começando com "Q" aparecem?</p>
+<p><span class="step-num">5</span>Use F4 no DSPSYSVAL, selecione <code>QPWDMINLEN</code> e anote o valor.</p>
+
+<h2>Exercício 1.3 — Lista de Bibliotecas</h2>
+<p><span class="step-num">6</span>Visualize sua lista de bibliotecas:</p>
+<pre>DSPLIBL</pre>
+<p>📝 Quais bibliotecas estão na parte <code>*USRLIBL</code>?</p>
+<p><span class="step-num">7</span>Adicione QGPL ao início da lista (se não estiver):</p>
+<pre>ADDLIBLE LIB(QGPL) POSITION(*FIRST)</pre>
+<p><span class="step-num">8</span>Defina biblioteca de trabalho atual:</p>
+<pre>CHGCURLIB CURLIB(QGPL)</pre>
+<p><span class="step-num">9</span>Verifique a mudança:</p>
+<pre>DSPLIBL</pre>
+<p>📝 Qual é sua <code>*CURLIB</code> agora?</p>
+
+<h2>Exercício 1.4 — Mensagens</h2>
+<p><span class="step-num">10</span>Exiba suas mensagens:</p>
+<pre>DSPMSG</pre>
+<p><span class="step-num">11</span>Envie uma mensagem para você mesmo:</p>
+<pre>SNDMSG MSG('Testando envio de mensagem - Lab 01') TOUSR(*REQUESTER)</pre>
+<p><span class="step-num">12</span>Exiba novamente e confirme o recebimento:</p>
+<pre>DSPMSG</pre>
+<p><span class="step-num">13</span>Envie mensagem para o operador:</p>
+<pre>SNDMSG MSG('Teste Lab 01') TOUSR(QSYSOPR) MSGTYPE(*INFO)</pre>
+
+<h2>Exercício 1.5 — Recuperação de Comandos</h2>
+<p><span class="step-num">14</span>Use <code>F9</code> para recuperar e executar novamente o <code>DSPJOB</code>.</p>
+<p><span class="step-num">15</span>Digite <code>DSP</code> e pressione <code>F4</code> para ver todos os comandos DSP disponíveis.</p>
+
+<h2>✅ Checklist de Conclusão</h2>
+<ul class="chk">
+<li>Executei DSPJOB e identifiquei meu job</li>
+<li>Consultei variáveis de sistema (QDATE, QSYSNAME)</li>
+<li>Usei F4 para ver parâmetros de comandos</li>
+<li>Visualizei e modifiquei minha lista de bibliotecas</li>
+<li>Enviei e recebi mensagens</li>
+<li>Usei F9 para recuperar comandos anteriores</li>
+</ul>
+
+<h2>💡 Desafio Extra</h2>
+<ul>
+<li>Descubra o valor de <code>QMAXSIGN</code> (máximo de tentativas de login)</li>
+<li>Encontre o valor de <code>QTIMZON</code> (fuso horário configurado)</li>
+<li>Use <code>GO MAIN</code> para explorar o menu principal do sistema</li>
+</ul>
+<div class="page-nav"><span></span><a href="lab-02-jobs.html">Lab 02 — Jobs →</a></div>
+</main><footer><a href="index.html">Início</a><a href="index.html#labs">Laboratórios</a><a href="https://github.com/seu-usuario/as400-lab">GitHub</a> | AS/400 Lab — MIT 2024</footer>
+<script>
+document.querySelectorAll('pre').forEach(pre=>{
+  const btn=document.createElement('button');
+  btn.className='copy-btn';btn.textContent='COPIAR';
+  btn.onclick=()=>{
+    const txt=[...pre.childNodes].filter(n=>n.nodeType===3||n.tagName!=='BUTTON').map(n=>n.textContent).join('').trim();
+    navigator.clipboard.writeText(txt).then(()=>{btn.textContent='OK ✓';setTimeout(()=>btn.textContent='COPIAR',1500)});
+  };
+  pre.appendChild(btn);
+});
+</script></body></html>
