@@ -4,7 +4,7 @@ Laboratório prático de comandos básicos e intermediários para manutenção e
 
 ## 🌐 GitHub Pages
 
-Acesse a interface interativa em: `https://seu-usuario.github.io/as400-lab/`
+Acesse a interface interativa em: `https://alemiti7.github.io/AS-400-Lab-v2/`
 
 ## 📁 Estrutura
 
@@ -28,5 +28,8 @@ Todos os arquivos estão no diretório raiz (sem subdiretórios):
 4. Acesse: `https://seu-usuario.github.io/as400-lab/`
 
 ## 📄 Licença
-
 MIT License — 2024
+
+## Contato:
+Alexandre Mitsuru Nikaitow
+📧 alemiti@gmail.com
