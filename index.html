@@ -2,193 +2,334 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>AS/400 Lab — Laboratório de Comandos Técnicos</title>
+<title>AS/400 Lab — Laboratório de Comandos Técnicos IBM i</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <style>
-:root{--g:#00d084;--gd:#00a866;--gk:#007a4a;--am:#f5a623;--rd:#e04040;--bg:#0a0f0d;--bg2:#111a14;--bg3:#162019;--sf:#1a2820;--br:#2a3d30;--br2:#3a5040;--tx:#d4e8d8;--tx2:#7ea88a;--tx3:#4a7055;--mo:'IBM Plex Mono',monospace;--sa:'IBM Plex Sans',sans-serif}
+:root{
+  --ibm-blue:#0f62fe;--ibm-blue-hover:#0043ce;--ibm-blue-light:#edf5ff;--ibm-blue-mid:#d0e2ff;
+  --ibm-gray-100:#161616;--ibm-gray-90:#262626;--ibm-gray-80:#393939;--ibm-gray-70:#525252;
+  --ibm-gray-60:#6f6f6f;--ibm-gray-50:#8d8d8d;--ibm-gray-30:#c6c6c6;--ibm-gray-20:#e0e0e0;
+  --ibm-gray-10:#f4f4f4;--ibm-white:#ffffff;
+  --ibm-red:#da1e28;--ibm-red-light:#fff1f1;--ibm-yellow:#f1c21b;--ibm-yellow-light:#fcf4d6;
+  --ibm-green:#24a148;--ibm-green-light:#defbe6;--ibm-teal:#009d9a;--ibm-purple:#8a3ffc;
+  --ibm-cyan:#1192e8;
+  --bg:var(--ibm-white);--bg2:var(--ibm-gray-10);--bg3:var(--ibm-blue-light);
+  --tx:var(--ibm-gray-100);--tx2:var(--ibm-gray-70);--tx3:var(--ibm-gray-50);
+  --br:var(--ibm-gray-20);--br2:var(--ibm-gray-30);
+  --accent:var(--ibm-blue);--accent-h:var(--ibm-blue-hover);
+  --mo:'IBM Plex Mono',monospace;--sa:'IBM Plex Sans',sans-serif;
+  --header-h:48px;--sidebar-w:256px;
+}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--sa);background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden}
-body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,rgba(0,255,100,.022) 0,transparent 2px,transparent 4px);pointer-events:none;z-index:9999}
-a{color:var(--g);text-decoration:none}
-header{border-bottom:1px solid var(--br);background:var(--bg2);padding:0 2rem;position:sticky;top:0;z-index:100}
-.hi{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:54px}
-.logo{font-family:var(--mo);font-size:13px;font-weight:600;color:var(--g);display:flex;align-items:center;gap:10px}
-.logo-box{width:28px;height:28px;border:1px solid var(--g);display:flex;align-items:center;justify-content:center;font-size:10px}
-nav a{font-family:var(--mo);font-size:11px;color:var(--tx2);margin-left:1.75rem;letter-spacing:.08em}
-nav a:hover{color:var(--g)}
-.ver{font-family:var(--mo);font-size:11px;border:1px solid var(--gk);color:var(--g);padding:2px 8px}
+body{font-family:var(--sa);background:var(--bg);color:var(--tx);min-height:100vh;font-size:14px;line-height:1.5}
+a{color:var(--accent);text-decoration:none}
+a:hover{color:var(--accent-h);text-decoration:underline}
 
-/* hero */
-.hero{max-width:1100px;margin:0 auto;padding:5rem 2rem 3rem}
-.hlabel{font-family:var(--mo);font-size:11px;color:var(--g);letter-spacing:.15em;margin-bottom:1rem}
-h1{font-family:var(--mo);font-size:clamp(30px,5vw,56px);font-weight:600;color:var(--g);line-height:1.08;letter-spacing:-.02em;margin-bottom:1.5rem}
-h1 span{color:var(--tx3)}
-.hdesc{font-size:16px;color:var(--tx2);line-height:1.75;max-width:580px;margin-bottom:2.5rem}
-.btns{display:flex;gap:1rem;flex-wrap:wrap}
-.btn{font-family:var(--mo);font-size:12px;font-weight:600;letter-spacing:.05em;padding:10px 22px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;border:none;transition:all .15s}
-.btn-p{background:var(--g);color:var(--bg)}.btn-p:hover{background:var(--gd)}
-.btn-o{background:transparent;color:var(--tx);border:1px solid var(--br2)}.btn-o:hover{border-color:var(--g);color:var(--g)}
+/* TOP BAR */
+.topbar{height:var(--header-h);background:var(--ibm-gray-100);color:var(--ibm-white);display:flex;align-items:center;padding:0 1rem;position:sticky;top:0;z-index:200;border-bottom:1px solid var(--ibm-gray-80)}
+.topbar-logo{display:flex;align-items:center;gap:0;font-size:13px;font-weight:400;color:var(--ibm-white);text-decoration:none;flex-shrink:0}
+.ibm-logo{display:flex;align-items:center;gap:0;margin-right:16px}
+.ibm-logo-bars{display:flex;flex-direction:column;gap:2.5px}
+.ibm-logo-bar{height:3px;background:var(--ibm-white)}
+.ibm-logo-bar:nth-child(1){width:24px}
+.ibm-logo-bar:nth-child(2){width:18px}
+.ibm-logo-bar:nth-child(3){width:24px}
+.ibm-logo-bar:nth-child(4){width:18px}
+.ibm-logo-bar:nth-child(5){width:24px}
+.ibm-logo-bar:nth-child(6){width:18px}
+.ibm-logo-bar:nth-child(7){width:24px}
+.topbar-divider{width:1px;height:20px;background:var(--ibm-gray-70);margin:0 14px;flex-shrink:0}
+.topbar-title{font-size:13px;font-weight:400;color:var(--ibm-gray-30);white-space:nowrap}
+.topbar-nav{display:flex;align-items:center;gap:0;margin-left:auto}
+.topbar-nav a{color:var(--ibm-gray-30);font-size:13px;padding:0 14px;height:var(--header-h);display:flex;align-items:center;text-decoration:none;border-bottom:2px solid transparent;transition:all .1s}
+.topbar-nav a:hover{color:var(--ibm-white);background:var(--ibm-gray-80)}
+.topbar-nav a.active{color:var(--ibm-white);border-bottom-color:var(--ibm-blue)}
+.topbar-search{margin-left:8px;position:relative}
+.topbar-search input{background:var(--ibm-gray-80);border:1px solid var(--ibm-gray-70);color:var(--ibm-white);font-family:var(--sa);font-size:13px;padding:6px 32px 6px 10px;width:200px;outline:none}
+.topbar-search input::placeholder{color:var(--ibm-gray-50)}
+.topbar-search input:focus{border-color:var(--ibm-blue);background:var(--ibm-gray-90)}
+.search-icon{position:absolute;right:8px;top:50%;transform:translateY(-50%);color:var(--ibm-gray-50);font-size:14px;pointer-events:none}
 
-/* stats */
-.stats{max-width:1100px;margin:0 auto;padding:0 2rem 3.5rem;display:flex;gap:2.5rem;flex-wrap:wrap}
-.stat{padding-right:2.5rem;border-right:1px solid var(--br)}.stat:last-child{border:none}
-.snum{font-family:var(--mo);font-size:30px;font-weight:600;color:var(--g);line-height:1}
-.slbl{font-size:11px;color:var(--tx3);letter-spacing:.06em;margin-top:3px}
+/* BREADCRUMB */
+.breadcrumb-bar{background:var(--bg2);border-bottom:1px solid var(--br);padding:0 2rem}
+.breadcrumb{font-size:12px;color:var(--tx3);display:flex;align-items:center;gap:0;height:40px;max-width:1200px;margin:0 auto}
+.breadcrumb a{color:var(--accent);font-size:12px;text-decoration:none}
+.breadcrumb a:hover{text-decoration:underline}
+.breadcrumb span{color:var(--tx3);margin:0 6px;font-size:11px}
 
-/* terminal */
-.term-sec{background:var(--bg2);border-top:1px solid var(--br);border-bottom:1px solid var(--br);padding:3rem 2rem}
-.ti{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center}
-.tinfo h2{font-family:var(--mo);font-size:20px;font-weight:600;color:var(--tx);margin-bottom:1rem}
-.tinfo p{font-size:15px;color:var(--tx2);line-height:1.7;margin-bottom:1.2rem}
-.twin{background:#050a07;border:1px solid var(--br);overflow:hidden}
-.tbar{background:var(--sf);padding:8px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--br)}
-.dot{width:10px;height:10px;border-radius:50%}
-.dr{background:#e04040}.dy{background:#f5a623}.dg{background:var(--g)}
-.ttl{font-family:var(--mo);font-size:11px;color:var(--tx3);margin-left:4px;letter-spacing:.08em}
-.tbody{padding:1.25rem 1.5rem;font-family:var(--mo);font-size:13px;line-height:2;min-height:260px}
-.tp{color:var(--g)}.tc{color:#fff}.to{color:var(--tx2)}.th{color:var(--am)}.te{color:var(--rd)}.tcm{color:var(--tx3)}
-.cur{display:inline-block;width:8px;height:14px;background:var(--g);vertical-align:middle;animation:blink 1s step-end infinite}
+/* HERO */
+.hero{background:var(--ibm-gray-100);color:var(--ibm-white);padding:0}
+.hero-inner{max-width:1200px;margin:0 auto;padding:4rem 2rem 3rem;display:grid;grid-template-columns:1fr 420px;gap:4rem;align-items:center}
+.hero-eyebrow{font-family:var(--mo);font-size:11px;letter-spacing:.1em;color:var(--ibm-blue);text-transform:uppercase;margin-bottom:1rem}
+.hero h1{font-size:clamp(28px,4vw,48px);font-weight:300;line-height:1.15;color:var(--ibm-white);margin-bottom:1rem;letter-spacing:-.02em}
+.hero h1 strong{font-weight:600;color:var(--ibm-blue)}
+.hero-sub{font-size:16px;color:var(--ibm-gray-30);line-height:1.6;margin-bottom:.5rem}
+.hero-author{font-size:13px;color:var(--ibm-gray-50);margin-bottom:2rem}
+.hero-author a{color:var(--ibm-blue);text-decoration:none}
+.hero-author a:hover{text-decoration:underline}
+.hero-btns{display:flex;gap:.75rem;flex-wrap:wrap}
+.btn{font-family:var(--sa);font-size:14px;font-weight:400;padding:12px 24px;display:inline-flex;align-items:center;gap:8px;cursor:pointer;border:none;text-decoration:none;transition:all .1s}
+.btn-primary{background:var(--ibm-blue);color:var(--ibm-white)}.btn-primary:hover{background:var(--ibm-blue-hover);color:var(--ibm-white);text-decoration:none}
+.btn-secondary{background:transparent;color:var(--ibm-white);border:1px solid var(--ibm-white)}.btn-secondary:hover{background:var(--ibm-white);color:var(--ibm-gray-100);text-decoration:none}
+.btn-ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}.btn-ghost:hover{background:var(--ibm-blue-light);text-decoration:none}
+
+/* HERO TERMINAL */
+.hero-term{background:#1a1a1a;border:1px solid #3d3d3d;overflow:hidden}
+.term-bar{background:#2d2d2d;padding:10px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #3d3d3d}
+.term-dot{width:12px;height:12px;border-radius:50%}
+.td-r{background:#ff5f57}.td-y{background:#ffbd2e}.td-g{background:#28ca41}
+.term-label{font-family:var(--mo);font-size:11px;color:#6f6f6f;margin-left:6px;letter-spacing:.06em}
+.term-body{padding:1.25rem 1.5rem;font-family:var(--mo);font-size:13px;line-height:1.9;min-height:240px;color:#d4d4d4}
+.tp{color:#4fc3f7}.tc{color:#fff}.to{color:#9e9e9e}.th{color:#ffcc80}.te{color:#ef9a9a}.tcm{color:#546e7a}
+.cur{display:inline-block;width:8px;height:15px;background:#4fc3f7;vertical-align:middle;animation:blink 1s step-end infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 
-/* modules */
-.sec{max-width:1100px;margin:0 auto;padding:4rem 2rem}
-.shead{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:2rem;border-bottom:1px solid var(--br);padding-bottom:.75rem}
-.stitle{font-family:var(--mo);font-size:12px;color:var(--tx2);letter-spacing:.1em}
-.scnt{font-family:var(--mo);font-size:11px;color:var(--tx3)}
-.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1px;background:var(--br);border:1px solid var(--br)}
-.mcard{background:var(--bg);padding:1.4rem;transition:background .15s;cursor:default}
-.mcard:hover{background:var(--bg3)}
-.mcard a{color:inherit;display:block;text-decoration:none}
-.mcard a:hover .mtitle{color:var(--g)}
-.mtop{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem}
-.mnum{font-family:var(--mo);font-size:11px;color:var(--tx3);letter-spacing:.1em}
-.lbadge{font-family:var(--mo);font-size:10px;padding:2px 8px;font-weight:600}
-.lb{background:rgba(0,208,132,.12);color:var(--g)}.li{background:rgba(245,166,35,.12);color:var(--am)}.la{background:rgba(224,64,64,.12);color:var(--rd)}
-.mtitle{font-family:var(--mo);font-size:14px;font-weight:600;color:var(--tx);margin-bottom:.4rem;transition:color .15s}
-.mdesc{font-size:13px;color:var(--tx2);line-height:1.6}
-.mtags{margin-top:.85rem;display:flex;gap:5px;flex-wrap:wrap}
-.tag{font-family:var(--mo);font-size:10px;color:var(--tx3);border:1px solid var(--br);padding:2px 6px}
+/* STATS */
+.stats-bar{background:var(--ibm-gray-90);border-bottom:1px solid var(--ibm-gray-80)}
+.stats-inner{max-width:1200px;margin:0 auto;padding:1.5rem 2rem;display:flex;gap:0}
+.stat-item{flex:1;padding:0 2rem;border-right:1px solid var(--ibm-gray-80);text-align:center}
+.stat-item:first-child{padding-left:0;text-align:left}
+.stat-item:last-child{border-right:none;text-align:right;padding-right:0}
+.stat-num{font-size:32px;font-weight:300;color:var(--ibm-white);line-height:1;font-family:var(--sa)}
+.stat-lbl{font-size:11px;color:var(--ibm-gray-50);text-transform:uppercase;letter-spacing:.08em;margin-top:4px}
 
-/* search */
-.srch-sec{background:var(--bg2);border-top:1px solid var(--br);border-bottom:1px solid var(--br);padding:3rem 2rem}
-.srch-i{max-width:1100px;margin:0 auto}
-.sbar{display:flex;border:1px solid var(--br2);margin-bottom:1.5rem}
-.spfx{font-family:var(--mo);font-size:14px;color:var(--g);background:var(--sf);padding:10px 14px;border-right:1px solid var(--br);user-select:none}
-#cs{flex:1;background:transparent;border:none;outline:none;font-family:var(--mo);font-size:13px;color:var(--tx);padding:10px 14px}
-#cs::placeholder{color:var(--tx3)}
-.cres{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;background:var(--br);border:1px solid var(--br);max-height:420px;overflow-y:auto}
-.ci{background:var(--bg);padding:.9rem 1.1rem}
-.cname{font-family:var(--mo);font-size:14px;font-weight:600;color:var(--g);margin-bottom:3px}
-.cdesc{font-size:12px;color:var(--tx2);line-height:1.5;margin-bottom:5px}
-.cex{font-family:var(--mo);font-size:11px;color:var(--tx3);background:var(--bg3);padding:3px 8px;border-left:2px solid var(--gk);word-break:break-all}
-.ccat{font-family:var(--mo);font-size:10px;color:var(--tx3);border:1px solid var(--br);padding:2px 7px;margin-top:5px;display:inline-block}
+/* MAIN SECTIONS */
+.main-wrap{max-width:1200px;margin:0 auto;padding:3rem 2rem}
 
-/* labs */
-.llist{display:flex;flex-direction:column;gap:1px;background:var(--br);border:1px solid var(--br)}
-.lrow{background:var(--bg);padding:1.2rem 1.5rem;display:flex;align-items:center;gap:1.5rem;transition:background .15s}
-.lrow:hover{background:var(--bg3)}
-.lrow a{display:contents;color:inherit;text-decoration:none}
-.lrow:hover .ltitle{color:var(--g)}
-.lnum{font-family:var(--mo);font-size:22px;font-weight:600;color:var(--br2);min-width:3rem}
-.linfo{flex:1}
-.ltitle{font-family:var(--mo);font-size:14px;font-weight:600;color:var(--tx);margin-bottom:3px;transition:color .15s}
-.ldesc{font-size:13px;color:var(--tx2)}
-.lmeta{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
-.ltime{font-family:var(--mo);font-size:11px;color:var(--tx3)}
+/* SECTION HEADER */
+.sec-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:1.5rem;padding-bottom:.75rem;border-bottom:1px solid var(--br)}
+.sec-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--tx2)}
+.sec-count{font-size:12px;color:var(--tx3);font-family:var(--mo)}
 
-/* scripts links */
-.slinks{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem;margin-top:1.5rem}
-.slink{background:var(--bg);border:1px solid var(--br);padding:1.4rem;transition:border-color .15s}
-.slink:hover{border-color:var(--br2)}
-.slink a{text-decoration:none}
-.slink:hover .slname{color:var(--g)}
-.slico{font-family:var(--mo);font-size:10px;color:var(--g);letter-spacing:.1em;margin-bottom:.6rem}
-.slname{font-family:var(--mo);font-size:15px;font-weight:600;color:var(--tx);margin-bottom:.4rem;transition:color .15s}
-.sldesc{font-size:13px;color:var(--tx2);line-height:1.6;margin-bottom:.8rem}
-.slusage{font-family:var(--mo);font-size:11px;color:var(--gd);background:var(--bg3);padding:5px 10px;border-left:2px solid var(--gk)}
+/* MODULE GRID */
+.mod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;background:var(--br);border:1px solid var(--br);margin-bottom:3rem}
+.mod-card{background:var(--bg);padding:1.5rem;transition:background .1s;position:relative}
+.mod-card::after{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:transparent;transition:background .1s}
+.mod-card:hover{background:var(--ibm-blue-light)}
+.mod-card:hover::after{background:var(--ibm-blue)}
+.mod-card a{display:block;text-decoration:none;color:inherit}
+.mod-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem}
+.mod-num{font-family:var(--mo);font-size:11px;color:var(--tx3);letter-spacing:.08em}
+.badge{font-family:var(--mo);font-size:10px;padding:2px 8px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.badge-b{background:var(--ibm-green-light);color:#0e6027}
+.badge-i{background:var(--ibm-yellow-light);color:#684e00}
+.badge-a{background:var(--ibm-red-light);color:var(--ibm-red)}
+.mod-title{font-size:14px;font-weight:600;color:var(--tx);margin-bottom:.4rem;transition:color .1s}
+.mod-card:hover .mod-title{color:var(--accent)}
+.mod-desc{font-size:13px;color:var(--tx2);line-height:1.55}
+.mod-tags{margin-top:.85rem;display:flex;gap:4px;flex-wrap:wrap}
+.tag{font-family:var(--mo);font-size:10px;color:var(--tx3);background:var(--bg2);border:1px solid var(--br);padding:2px 6px}
 
-footer{border-top:1px solid var(--br);padding:1.75rem 2rem;background:var(--bg2);font-family:var(--mo);font-size:11px;color:var(--tx3);text-align:center}
-footer a{color:var(--tx3);margin:0 .75rem}footer a:hover{color:var(--g)}
-@media(max-width:768px){.ti{grid-template-columns:1fr}nav{display:none}.stats{gap:1.5rem}}
+/* SEARCH */
+.search-sec{background:var(--bg2);border-top:1px solid var(--br);border-bottom:1px solid var(--br);padding:3rem 2rem}
+.search-inner{max-width:1200px;margin:0 auto}
+.search-bar{display:flex;border:1px solid var(--br2);margin-bottom:1.5rem;background:var(--bg)}
+.search-pfx{font-family:var(--mo);font-size:13px;color:var(--tx3);background:var(--bg2);padding:10px 14px;border-right:1px solid var(--br);white-space:nowrap;user-select:none}
+#cmd-search{flex:1;background:transparent;border:none;outline:none;font-family:var(--mo);font-size:13px;color:var(--tx);padding:10px 14px}
+#cmd-search:focus{outline:2px solid var(--ibm-blue);outline-offset:-2px}
+#cmd-search::placeholder{color:var(--tx3)}
+.cmd-results{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;background:var(--br);border:1px solid var(--br);max-height:420px;overflow-y:auto}
+.cmd-item{background:var(--bg);padding:1rem 1.25rem;border-left:3px solid transparent;transition:border-color .1s}
+.cmd-item:hover{background:var(--ibm-blue-light);border-left-color:var(--ibm-blue)}
+.cmd-name{font-family:var(--mo);font-size:14px;font-weight:600;color:var(--accent);margin-bottom:3px}
+.cmd-desc{font-size:12px;color:var(--tx2);line-height:1.5;margin-bottom:6px}
+.cmd-ex{font-family:var(--mo);font-size:11px;color:var(--tx2);background:var(--bg2);padding:4px 8px;border-left:2px solid var(--ibm-blue);word-break:break-all}
+.cmd-cat{font-family:var(--mo);font-size:10px;color:var(--tx3);border:1px solid var(--br);padding:2px 7px;margin-top:5px;display:inline-block;text-transform:uppercase}
+
+/* LABS */
+.lab-list{display:flex;flex-direction:column;gap:1px;background:var(--br);border:1px solid var(--br)}
+.lab-row{background:var(--bg);padding:1.25rem 1.5rem;display:flex;align-items:center;gap:1.5rem;transition:background .1s;border-left:3px solid transparent}
+.lab-row:hover{background:var(--ibm-blue-light);border-left-color:var(--ibm-blue)}
+.lab-row a{display:contents;color:inherit;text-decoration:none}
+.lab-row:hover .lab-title{color:var(--accent)}
+.lab-num{font-family:var(--mo);font-size:24px;font-weight:300;color:var(--br2);min-width:3rem}
+.lab-info{flex:1}
+.lab-title{font-size:14px;font-weight:600;color:var(--tx);margin-bottom:3px;transition:color .1s}
+.lab-desc{font-size:13px;color:var(--tx2)}
+.lab-meta{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.lab-time{font-family:var(--mo);font-size:11px;color:var(--tx3)}
+
+/* SCRIPTS */
+.scripts-sec{background:var(--bg2);border-top:1px solid var(--br);padding:3rem 2rem}
+.scripts-inner{max-width:1200px;margin:0 auto}
+.script-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1rem}
+.script-card{background:var(--bg);border:1px solid var(--br);border-top:3px solid var(--ibm-blue);padding:1.5rem;transition:box-shadow .1s}
+.script-card:hover{box-shadow:0 2px 12px rgba(15,98,254,.12)}
+.script-card a{display:block;text-decoration:none;color:inherit}
+.script-badge{font-family:var(--mo);font-size:10px;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem}
+.script-name{font-size:15px;font-weight:600;color:var(--tx);margin-bottom:.4rem;transition:color .1s}
+.script-card:hover .script-name{color:var(--accent)}
+.script-desc{font-size:13px;color:var(--tx2);line-height:1.6;margin-bottom:.75rem}
+.script-usage{font-family:var(--mo);font-size:11px;color:var(--accent);background:var(--ibm-blue-light);padding:5px 10px;border-left:2px solid var(--ibm-blue);word-break:break-all}
+
+/* FOOTER */
+footer{background:var(--ibm-gray-100);color:var(--ibm-gray-50);padding:2rem;border-top:1px solid var(--ibm-gray-80)}
+.footer-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.footer-left{font-size:12px;line-height:1.7}
+.footer-left a{color:var(--ibm-gray-30);text-decoration:none}
+.footer-left a:hover{color:var(--ibm-white)}
+.footer-links{display:flex;gap:1.5rem}
+.footer-links a{font-size:12px;color:var(--ibm-gray-50);text-decoration:none}
+.footer-links a:hover{color:var(--ibm-white)}
+
+@media(max-width:900px){
+  .hero-inner{grid-template-columns:1fr}
+  .hero-term{display:none}
+  .stats-inner{flex-wrap:wrap;gap:1.5rem}
+  .stat-item{border:none;text-align:left;padding:0}
+  .topbar-nav{display:none}
+  .topbar-search{display:none}
+}
 </style>
 </head>
 <body>
-<header>
-  <div class="hi">
-    <div class="logo"><div class="logo-box">400</div>AS/400 LAB</div>
-    <nav>
-      <a href="#modulos">MÓDULOS</a>
-      <a href="#comandos">COMANDOS</a>
-      <a href="#labs">LABORATÓRIOS</a>
-      <a href="#scripts">SCRIPTS</a>
-    </nav>
-    <span class="ver">v1.0.0</span>
+
+<!-- TOP BAR -->
+<header class="topbar">
+  <a href="index.html" class="topbar-logo">
+    <div class="ibm-logo">
+      <div class="ibm-logo-bars">
+        <div class="ibm-logo-bar"></div>
+        <div class="ibm-logo-bar"></div>
+        <div class="ibm-logo-bar"></div>
+        <div class="ibm-logo-bar"></div>
+        <div class="ibm-logo-bar"></div>
+        <div class="ibm-logo-bar"></div>
+        <div class="ibm-logo-bar"></div>
+      </div>
+    </div>
+    <div class="topbar-divider"></div>
+    <span class="topbar-title">AS/400 Lab</span>
+  </a>
+  <nav class="topbar-nav">
+    <a href="#modulos" class="active">Módulos</a>
+    <a href="#comandos">Comandos</a>
+    <a href="#labs">Laboratórios</a>
+    <a href="#scripts">Scripts</a>
+    <a href="referencia-rapida.html">Referência</a>
+  </nav>
+  <div class="topbar-search">
+    <input id="top-search" type="text" placeholder="Pesquisar..."/>
+    <span class="search-icon">⌕</span>
   </div>
 </header>
 
-<section class="hero">
-  <div class="hlabel">▶ LABORATÓRIO TÉCNICO IBM AS/400 / iSeries / IBM i</div>
-  <h1>Comandos.<br><span>Operação.</span><br>Manutenção.</h1>
-  <p class="hdesc">Referência prática de comandos CL para operadores e técnicos do IBM AS/400. Da sessão interativa ao backup completo do sistema.</p>
-  <div class="btns">
-    <a href="https://github.com/seu-usuario/as400-lab" class="btn btn-p">⬡ Ver no GitHub</a>
-    <a href="#comandos" class="btn btn-o">→ Buscar Comandos</a>
+<!-- BREADCRUMB -->
+<div class="breadcrumb-bar">
+  <div class="breadcrumb">
+    <a href="index.html">Todos os produtos</a>
+    <span>›</span>
+    <a href="index.html">AS/400 Lab</a>
+    <span>›</span>
+    <span>Início</span>
   </div>
-</section>
-
-<div class="stats">
-  <div class="stat"><div class="snum">11</div><div class="slbl">MÓDULOS</div></div>
-  <div class="stat"><div class="snum">5</div><div class="slbl">LABORATÓRIOS</div></div>
-  <div class="stat"><div class="snum">150+</div><div class="slbl">COMANDOS CL</div></div>
-  <div class="stat"><div class="snum">3</div><div class="slbl">SCRIPTS CLP</div></div>
 </div>
 
-<section class="term-sec">
-  <div class="ti">
-    <div class="tinfo">
-      <h2>Referência direta,<br>sem enrolação.</h2>
-      <p>Cada módulo documenta os comandos essenciais para operação e manutenção do AS/400, com exemplos reais e notas de risco.</p>
-      <p>Scripts CLP prontos para compilar e usar em rotinas de monitoramento, spool e backup.</p>
-      <a href="#modulos" class="btn btn-o" style="width:fit-content">Ver todos os módulos →</a>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow">▸ Laboratório Técnico IBM AS/400 / iSeries / IBM i</div>
+      <h1>Comandos CL.<br><strong>Operação. Manutenção.</strong></h1>
+      <p class="hero-sub">Referência prática de comandos CL para operadores e técnicos do IBM AS/400. Da sessão interativa ao backup completo do sistema.</p>
+      <p class="hero-author">Criado por <a href="https://github.com/alemiti7" target="_blank">alemiti7</a> desde 2024 · IBM i / iSeries / AS400</p>
+      <div class="hero-btns">
+        <a href="https://github.com/alemiti7/AS-400-Lab-v2" class="btn btn-primary" target="_blank">Ver no GitHub →</a>
+        <a href="#comandos" class="btn btn-secondary">Buscar Comandos</a>
+      </div>
     </div>
-    <div class="twin">
-      <div class="tbar"><div class="dot dr"></div><div class="dot dy"></div><div class="dot dg"></div><span class="ttl">QCMD — AS400SRV — OPERADOR</span></div>
-      <div class="tbody" id="tb"></div>
+    <div class="hero-term">
+      <div class="term-bar">
+        <div class="term-dot td-r"></div>
+        <div class="term-dot td-y"></div>
+        <div class="term-dot td-g"></div>
+        <span class="term-label">QCMD — AS400SRV — OPERADOR</span>
+      </div>
+      <div class="term-body" id="tb"></div>
     </div>
   </div>
 </section>
 
-<section class="sec" id="modulos">
-  <div class="shead"><span class="stitle">MÓDULOS DE ESTUDO</span><span class="scnt">11 módulos · básico ao avançado</span></div>
-  <div class="mgrid" id="mg"></div>
-</section>
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <div class="stat-num">11</div>
+      <div class="stat-lbl">Módulos</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">5</div>
+      <div class="stat-lbl">Laboratórios</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">150+</div>
+      <div class="stat-lbl">Comandos CL</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">3</div>
+      <div class="stat-lbl">Scripts CLP</div>
+    </div>
+  </div>
+</div>
 
-<section class="srch-sec" id="comandos">
-  <div class="srch-i">
-    <div class="shead" style="border-bottom:1px solid var(--br);padding-bottom:.75rem;margin-bottom:1.5rem"><span class="stitle">BUSCA RÁPIDA DE COMANDOS</span><span class="scnt">50+ comandos documentados</span></div>
-    <div class="sbar"><span class="spfx">===></span><input id="cs" placeholder="Ex: WRKACTJOB, backup, usuário, jobs..." autocomplete="off" spellcheck="false"/></div>
-    <div class="cres" id="cr"></div>
+<!-- MODULES -->
+<div class="main-wrap" id="modulos">
+  <div class="sec-header">
+    <span class="sec-title">Módulos de Estudo</span>
+    <span class="sec-count">11 módulos · básico ao avançado</span>
+  </div>
+  <div class="mod-grid" id="mg"></div>
+</div>
+
+<!-- COMMAND SEARCH -->
+<section class="search-sec" id="comandos">
+  <div class="search-inner">
+    <div class="sec-header">
+      <span class="sec-title">Busca Rápida de Comandos</span>
+      <span class="sec-count">50+ comandos documentados</span>
+    </div>
+    <div class="search-bar">
+      <span class="search-pfx">===></span>
+      <input id="cmd-search" type="text" placeholder="Ex: WRKACTJOB, backup, usuário, jobs..." autocomplete="off" spellcheck="false"/>
+    </div>
+    <div class="cmd-results" id="cr"></div>
   </div>
 </section>
 
-<section class="sec" id="labs">
-  <div class="shead"><span class="stitle">LABORATÓRIOS PRÁTICOS</span><span class="scnt">5 laboratórios progressivos</span></div>
-  <div class="llist" id="ll"></div>
-</section>
+<!-- LABS -->
+<div class="main-wrap" id="labs">
+  <div class="sec-header">
+    <span class="sec-title">Laboratórios Práticos</span>
+    <span class="sec-count">5 laboratórios progressivos</span>
+  </div>
+  <div class="lab-list" id="ll"></div>
+</div>
 
-<section class="sec" id="scripts" style="background:var(--bg2);max-width:100%;padding:3rem 2rem;border-top:1px solid var(--br)">
-  <div style="max-width:1100px;margin:0 auto">
-    <div class="shead"><span class="stitle">SCRIPTS CLP</span><span class="scnt">prontos para compilar e usar</span></div>
-    <div class="slinks" id="sl"></div>
+<!-- SCRIPTS -->
+<section class="scripts-sec" id="scripts">
+  <div class="scripts-inner">
+    <div class="sec-header">
+      <span class="sec-title">Scripts CLP</span>
+      <span class="sec-count">prontos para compilar e usar</span>
+    </div>
+    <div class="script-grid" id="sl"></div>
   </div>
 </section>
 
+<!-- FOOTER -->
 <footer>
-  <a href="https://github.com/seu-usuario/as400-lab">GitHub</a>
-  <a href="contributing.html">Contribuir</a>
-  <span style="color:var(--br2)">|</span>
-  AS/400 Lab — MIT License — 2024
+  <div class="footer-inner">
+    <div class="footer-left">
+      AS/400 Lab — Referência técnica IBM AS/400 / iSeries / IBM i<br>
+      Criado por <a href="https://github.com/alemiti7" target="_blank">alemiti7</a> · MIT License · 2024
+    </div>
+    <div class="footer-links">
+      <a href="https://github.com/alemiti7/AS-400-Lab-v2" target="_blank">GitHub</a>
+      <a href="referencia-rapida.html">Referência Rápida</a>
+      <a href="mod-01-introducao.html">Documentação</a>
+    </div>
+  </div>
 </footer>
 
 <script>
@@ -205,8 +346,8 @@ const MODS=[
   {n:'10',t:'Performance',lv:'i',desc:'Monitoramento de CPU, memória, disco e diagnóstico de locks.',tags:['WRKSYSSTS','WRKDSKSTS','WRKOBJLCK'],f:'mod-10-performance.html'},
   {n:'11',t:'Redes e Comunicação',lv:'i',desc:'TCP/IP, FTP, status de linhas e diagnóstico de conectividade.',tags:['NETSTAT','PING','STRTCP'],f:'mod-11-redes.html'},
 ];
-const LV={b:{l:'BÁSICO',c:'lb'},i:{l:'INTERMEDIÁRIO',c:'li'},a:{l:'AVANÇADO',c:'la'}};
-document.getElementById('mg').innerHTML=MODS.map(m=>`<div class="mcard"><a href="${m.f}"><div class="mtop"><span class="mnum">MOD-${m.n}</span><span class="lbadge ${LV[m.lv].c}">${LV[m.lv].l}</span></div><div class="mtitle">${m.t}</div><div class="mdesc">${m.desc}</div><div class="mtags">${m.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div></a></div>`).join('');
+const LV={b:{l:'Básico',c:'badge-b'},i:{l:'Intermediário',c:'badge-i'},a:{l:'Avançado',c:'badge-a'}};
+document.getElementById('mg').innerHTML=MODS.map(m=>`<div class="mod-card"><a href="${m.f}"><div class="mod-top"><span class="mod-num">MOD-${m.n}</span><span class="badge ${LV[m.lv].c}">${LV[m.lv].l}</span></div><div class="mod-title">${m.t}</div><div class="mod-desc">${m.desc}</div><div class="mod-tags">${m.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div></a></div>`).join('');
 
 const LABS=[
   {n:'01',t:'Comandos Básicos',lv:'b',desc:'Navegação, variáveis de sistema, lista de bibliotecas e mensagens.',time:'30–45 min',f:'lab-01-basico.html'},
@@ -215,14 +356,14 @@ const LABS=[
   {n:'04',t:'Objetos e Bibliotecas',lv:'i',desc:'Criação, cópia, movimentação, backup e restauração de objetos.',time:'45–60 min',f:'lab-04-objetos.html'},
   {n:'05',t:'Manutenção do Sistema',lv:'a',desc:'Performance, spool, log do sistema e checklist de manutenção preventiva.',time:'60–90 min',f:'lab-05-manutencao.html'},
 ];
-document.getElementById('ll').innerHTML=LABS.map(l=>`<div class="lrow"><a href="${l.f}"><div class="lnum">${l.n}</div><div class="linfo"><div class="ltitle">${l.t}</div><div class="ldesc">${l.desc}</div></div><div class="lmeta"><span class="lbadge ${LV[l.lv].c}">${LV[l.lv].l}</span><span class="ltime">${l.time}</span></div></a></div>`).join('');
+document.getElementById('ll').innerHTML=LABS.map(l=>`<div class="lab-row"><a href="${l.f}"><div class="lab-num">${l.n}</div><div class="lab-info"><div class="lab-title">${l.t}</div><div class="lab-desc">${l.desc}</div></div><div class="lab-meta"><span class="badge ${LV[l.lv].c}">${LV[l.lv].l}</span><span class="lab-time">${l.time}</span></div></a></div>`).join('');
 
 const SCRIPTS=[
   {ico:'SCRIPT · CLP',n:'script-monitoramento.html',lbl:'monitoramento.clp',desc:'Relatório completo de status: CPU, jobs, disco, subsistemas e impressoras.',u:'CALL PGM(SCRIPTLIB/MONITORA)'},
   {ico:'SCRIPT · CLP',n:'script-limpeza-spool.html',lbl:'limpeza-spool.clp',desc:'Remove arquivos de spool expirados e limpa output queues configuradas.',u:'CALL PGM(SCRIPTLIB/LIMPSPOOL)'},
   {ico:'SCRIPT · CLP',n:'script-backup-biblioteca.html',lbl:'backup-biblioteca.clp',desc:'Backup parametrizado de biblioteca para Save File com nome automático por data.',u:"CALL PGM(SCRIPTLIB/BKPLIB) PARM('PRODLIB' 'BKPLIB')"},
 ];
-document.getElementById('sl').innerHTML=SCRIPTS.map(s=>`<div class="slink"><a href="${s.n}"><div class="slico">${s.ico}</div><div class="slname">${s.lbl}</div><div class="sldesc">${s.desc}</div><div class="slusage">${s.u}</div></a></div>`).join('');
+document.getElementById('sl').innerHTML=SCRIPTS.map(s=>`<div class="script-card"><a href="${s.n}"><div class="script-badge">${s.ico}</div><div class="script-name">${s.lbl}</div><div class="script-desc">${s.desc}</div><div class="script-usage">${s.u}</div></a></div>`).join('');
 
 const CMDS=[
   {nm:'WRKACTJOB',ct:'jobs',d:'Lista todos os jobs ativos no sistema com status e CPU%',ex:'WRKACTJOB SBS(*ALL)'},
@@ -282,13 +423,17 @@ const CMDS=[
 ];
 function renderCmds(list){
   document.getElementById('cr').innerHTML=list.length
-    ?list.map(c=>`<div class="ci"><div class="cname">${c.nm}</div><div class="cdesc">${c.d}</div><div class="cex">${c.ex}</div><span class="ccat">${c.ct.toUpperCase()}</span></div>`).join('')
-    :'<div class="ci"><div class="cdesc" style="color:var(--tx3)">Nenhum comando encontrado.</div></div>';
+    ?list.map(c=>`<div class="cmd-item"><div class="cmd-name">${c.nm}</div><div class="cmd-desc">${c.d}</div><div class="cmd-ex">${c.ex}</div><span class="cmd-cat">${c.ct}</span></div>`).join('')
+    :'<div class="cmd-item"><div class="cmd-desc" style="color:#8d8d8d">Nenhum comando encontrado.</div></div>';
 }
 renderCmds(CMDS.slice(0,15));
-document.getElementById('cs').addEventListener('input',function(){
+document.getElementById('cmd-search').addEventListener('input',function(){
   const q=this.value.toLowerCase().trim();
   renderCmds(q?CMDS.filter(c=>c.nm.toLowerCase().includes(q)||c.d.toLowerCase().includes(q)||c.ct.includes(q)||c.ex.toLowerCase().includes(q)):CMDS.slice(0,15));
+});
+document.getElementById('top-search').addEventListener('input',function(){
+  const q=this.value.toLowerCase().trim();
+  if(q.length>1){document.getElementById('cmd-search').value=this.value;renderCmds(CMDS.filter(c=>c.nm.toLowerCase().includes(q)||c.d.toLowerCase().includes(q)||c.ct.includes(q)||c.ex.toLowerCase().includes(q)));document.getElementById('comandos').scrollIntoView({behavior:'smooth'});}
 });
 
 // terminal animation

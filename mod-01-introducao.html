@@ -4,62 +4,169 @@
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Módulo 01 — Introdução ao AS/400 — AS/400 Lab</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
 <style>
-:root{--g:#00d084;--gd:#00a866;--gk:#007a4a;--am:#f5a623;--rd:#e04040;--bg:#0a0f0d;--bg2:#111a14;--bg3:#162019;--sf:#1a2820;--br:#2a3d30;--br2:#3a5040;--tx:#d4e8d8;--tx2:#7ea88a;--tx3:#4a7055;--mo:'IBM Plex Mono',monospace;--sa:'IBM Plex Sans',sans-serif}
+:root{
+  --ibm-blue:#0f62fe;--ibm-blue-hover:#0043ce;--ibm-blue-light:#edf5ff;--ibm-blue-mid:#d0e2ff;
+  --ibm-gray-100:#161616;--ibm-gray-90:#262626;--ibm-gray-80:#393939;--ibm-gray-70:#525252;
+  --ibm-gray-60:#6f6f6f;--ibm-gray-50:#8d8d8d;--ibm-gray-30:#c6c6c6;--ibm-gray-20:#e0e0e0;
+  --ibm-gray-10:#f4f4f4;--ibm-white:#ffffff;
+  --ibm-red:#da1e28;--ibm-red-light:#fff1f1;--ibm-yellow:#f1c21b;--ibm-yellow-light:#fcf4d6;
+  --ibm-green:#24a148;--ibm-green-light:#defbe6;--ibm-teal:#009d9a;
+  --bg:var(--ibm-white);--bg2:var(--ibm-gray-10);--bg3:var(--ibm-blue-light);
+  --tx:var(--ibm-gray-100);--tx2:var(--ibm-gray-70);--tx3:var(--ibm-gray-50);
+  --br:var(--ibm-gray-20);--br2:var(--ibm-gray-30);
+  --accent:var(--ibm-blue);--accent-h:var(--ibm-blue-hover);
+  --mo:'IBM Plex Mono',monospace;--sa:'IBM Plex Sans',sans-serif;
+  --header-h:48px;
+}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--sa);background:var(--bg);color:var(--tx);min-height:100vh}
-body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,rgba(0,255,100,.022) 0,transparent 2px,transparent 4px);pointer-events:none;z-index:9999}
-a{color:var(--g);text-decoration:none}a:hover{color:var(--gd)}
-header{border-bottom:1px solid var(--br);background:var(--bg2);padding:0 2rem;position:sticky;top:0;z-index:100}
-.hi{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:52px}
-.logo{font-family:var(--mo);font-size:13px;font-weight:600;color:var(--g);display:flex;align-items:center;gap:10px;text-decoration:none}
-.logo-box{width:26px;height:26px;border:1px solid var(--g);display:flex;align-items:center;justify-content:center;font-size:10px}
-nav{display:flex;gap:1.5rem}
-nav a{font-family:var(--mo);font-size:11px;color:var(--tx2);letter-spacing:.08em}
-nav a:hover,nav a.active{color:var(--g)}
-.main{max-width:860px;margin:0 auto;padding:2.5rem 2rem 4rem}
+body{font-family:var(--sa);background:var(--bg);color:var(--tx);min-height:100vh;font-size:14px;line-height:1.5}
+a{color:var(--accent);text-decoration:none}
+a:hover{color:var(--accent-h);text-decoration:underline}
+
+/* TOP BAR */
+.topbar{height:var(--header-h);background:var(--ibm-gray-100);color:var(--ibm-white);display:flex;align-items:center;padding:0 1rem;position:sticky;top:0;z-index:200;border-bottom:1px solid var(--ibm-gray-80)}
+.topbar-logo{display:flex;align-items:center;gap:0;font-size:13px;font-weight:400;color:var(--ibm-white);text-decoration:none;flex-shrink:0}
+.ibm-logo{display:flex;align-items:center;margin-right:16px}
+.ibm-logo-bars{display:flex;flex-direction:column;gap:2.5px}
+.ibm-logo-bar{height:3px;background:var(--ibm-white)}
+.ibm-logo-bar:nth-child(1){width:24px}.ibm-logo-bar:nth-child(2){width:18px}.ibm-logo-bar:nth-child(3){width:24px}
+.ibm-logo-bar:nth-child(4){width:18px}.ibm-logo-bar:nth-child(5){width:24px}.ibm-logo-bar:nth-child(6){width:18px}
+.ibm-logo-bar:nth-child(7){width:24px}
+.topbar-divider{width:1px;height:20px;background:var(--ibm-gray-70);margin:0 14px;flex-shrink:0}
+.topbar-title{font-size:13px;font-weight:400;color:var(--ibm-gray-30);white-space:nowrap}
+.topbar-nav{display:flex;align-items:center;margin-left:auto}
+.topbar-nav a{color:var(--ibm-gray-30);font-size:13px;padding:0 14px;height:var(--header-h);display:flex;align-items:center;text-decoration:none;border-bottom:2px solid transparent;transition:all .1s}
+.topbar-nav a:hover{color:var(--ibm-white);background:var(--ibm-gray-80)}
+.topbar-nav a.active{color:var(--ibm-white);border-bottom-color:var(--ibm-blue)}
+
+/* BREADCRUMB */
+.breadcrumb-bar{background:var(--bg2);border-bottom:1px solid var(--br);padding:0 2rem}
+.breadcrumb{font-size:12px;color:var(--tx3);display:flex;align-items:center;gap:0;height:40px;max-width:1200px;margin:0 auto}
+.breadcrumb a{color:var(--accent);font-size:12px;text-decoration:none}
+.breadcrumb a:hover{text-decoration:underline}
+.breadcrumb span{color:var(--tx3);margin:0 6px;font-size:11px}
+
+/* CONTENT LAYOUT */
+.content-wrap{display:grid;grid-template-columns:256px 1fr;max-width:1200px;margin:0 auto}
+.sidebar{border-right:1px solid var(--br);min-height:calc(100vh - 88px);padding:1.5rem 0;position:sticky;top:88px;height:calc(100vh - 88px);overflow-y:auto}
+.sidebar-section{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--tx3);padding:.75rem 1rem .25rem;margin-top:.5rem}
+.sidebar a{display:block;font-size:13px;color:var(--tx2);padding:.45rem 1rem;text-decoration:none;border-left:3px solid transparent;transition:all .1s}
+.sidebar a:hover{color:var(--accent);background:var(--ibm-blue-light);text-decoration:none}
+.sidebar a.active{color:var(--accent);border-left-color:var(--ibm-blue);background:var(--ibm-blue-light);font-weight:500}
+.main{padding:2.5rem 3rem 4rem;max-width:800px}
+
+/* TYPOGRAPHY */
 .crumb{font-family:var(--mo);font-size:11px;color:var(--tx3);margin-bottom:1.75rem;display:flex;gap:.4rem;align-items:center}
-.crumb a{color:var(--tx3)}.crumb a:hover{color:var(--g)}
-h1{font-family:var(--mo);font-size:clamp(20px,3.5vw,32px);font-weight:600;color:var(--g);line-height:1.15;margin-bottom:.5rem}
-.subtitle{font-size:15px;color:var(--tx2);margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--br)}
-h2{font-family:var(--mo);font-size:16px;font-weight:600;color:var(--tx);margin:2.5rem 0 .85rem;padding-bottom:.4rem;border-bottom:1px solid var(--br)}
-h3{font-family:var(--mo);font-size:13px;font-weight:600;color:var(--am);margin:1.5rem 0 .5rem}
-p{font-size:15px;color:var(--tx2);line-height:1.75;margin-bottom:.9rem}
-ul,ol{padding-left:1.4rem;color:var(--tx2);font-size:15px;line-height:1.85;margin-bottom:1rem}
+.crumb a{color:var(--tx3)}.crumb a:hover{color:var(--accent)}
+h1{font-size:clamp(22px,3vw,34px);font-weight:300;color:var(--tx);line-height:1.2;margin-bottom:.5rem;letter-spacing:-.01em}
+.subtitle{font-size:15px;color:var(--tx2);margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--br);line-height:1.6}
+h2{font-size:16px;font-weight:600;color:var(--tx);margin:2.5rem 0 .85rem;padding-bottom:.5rem;border-bottom:1px solid var(--br)}
+h3{font-size:13px;font-weight:600;color:var(--ibm-teal);margin:1.5rem 0 .5rem;text-transform:uppercase;letter-spacing:.05em}
+p{font-size:14px;color:var(--tx2);line-height:1.75;margin-bottom:.9rem}
+ul,ol{padding-left:1.4rem;color:var(--tx2);font-size:14px;line-height:1.85;margin-bottom:1rem}
 li{margin-bottom:.15rem}
 strong{color:var(--tx);font-weight:600}
-code{font-family:var(--mo);font-size:12px;background:var(--bg3);border:1px solid var(--br);color:var(--g);padding:1px 6px}
-pre{font-family:var(--mo);font-size:13px;background:#050a07;border:1px solid var(--br);color:var(--tx);padding:1.2rem 1.4rem 1.2rem 1.4rem;overflow-x:auto;line-height:1.9;margin:.6rem 0 1.2rem;position:relative;border-left:3px solid var(--gk)}
-.copy-btn{position:absolute;top:7px;right:8px;font-family:var(--mo);font-size:10px;background:var(--sf);border:1px solid var(--br2);color:var(--tx2);padding:3px 8px;cursor:pointer;letter-spacing:.05em}
-.copy-btn:hover{color:var(--g);border-color:var(--g)}
+code{font-family:var(--mo);font-size:12px;background:var(--bg2);border:1px solid var(--br);color:var(--ibm-teal);padding:1px 5px}
+pre{font-family:var(--mo);font-size:13px;background:var(--ibm-gray-100);color:#f4f4f4;padding:1.25rem 1.5rem;overflow-x:auto;line-height:1.85;margin:.6rem 0 1.2rem;position:relative;border-left:3px solid var(--ibm-blue)}
+pre code{background:none;border:none;color:inherit;padding:0;font-size:inherit}
+.copy-btn{position:absolute;top:8px;right:8px;font-family:var(--mo);font-size:10px;background:var(--ibm-gray-80);border:none;color:var(--ibm-gray-30);padding:4px 10px;cursor:pointer;letter-spacing:.05em;transition:all .1s}
+.copy-btn:hover{background:var(--ibm-blue);color:var(--ibm-white)}
 table{width:100%;border-collapse:collapse;font-size:13px;margin:1rem 0 1.5rem}
-th{font-family:var(--mo);font-size:11px;font-weight:600;color:var(--tx3);letter-spacing:.08em;text-align:left;padding:8px 12px;border-bottom:1px solid var(--br);background:var(--bg2)}
-td{padding:8px 12px;border-bottom:1px solid var(--br);color:var(--tx2);vertical-align:top}
+th{font-family:var(--mo);font-size:11px;font-weight:600;color:var(--tx2);letter-spacing:.08em;text-align:left;padding:10px 14px;border-bottom:2px solid var(--br2);background:var(--bg2)}
+td{padding:10px 14px;border-bottom:1px solid var(--br);color:var(--tx2);vertical-align:top}
 td code{font-size:12px}
-tr:hover td{background:var(--bg3)}
-.warn{background:rgba(224,64,64,.08);border-left:3px solid var(--rd);padding:.75rem 1rem;font-size:14px;color:var(--tx2);margin:1rem 0;line-height:1.6}
-.warn strong{color:var(--rd)}
-.info{background:rgba(0,208,132,.07);border-left:3px solid var(--gk);padding:.75rem 1rem;font-size:14px;color:var(--tx2);margin:1rem 0;line-height:1.6}
+tr:hover td{background:var(--ibm-blue-light)}
+.warn{background:var(--ibm-red-light);border-left:3px solid var(--ibm-red);padding:.85rem 1.1rem;font-size:14px;color:var(--tx);margin:1rem 0;line-height:1.65}
+.warn strong{color:var(--ibm-red)}
+.info{background:var(--ibm-blue-light);border-left:3px solid var(--ibm-blue);padding:.85rem 1.1rem;font-size:14px;color:var(--tx);margin:1rem 0;line-height:1.65}
 .page-nav{display:flex;justify-content:space-between;margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--br);flex-wrap:wrap;gap:1rem}
-.page-nav a{font-family:var(--mo);font-size:12px;color:var(--tx2);padding:8px 14px;border:1px solid var(--br);transition:all .15s}
-.page-nav a:hover{color:var(--g);border-color:var(--g);text-decoration:none}
-.lbadge{font-family:var(--mo);font-size:10px;padding:2px 8px;font-weight:600;margin-left:.75rem}
-.lb{background:rgba(0,208,132,.12);color:var(--g)}.li{background:rgba(245,166,35,.12);color:var(--am)}.la{background:rgba(224,64,64,.12);color:var(--rd)}
+.page-nav a{font-size:13px;color:var(--tx2);padding:10px 18px;border:1px solid var(--br);transition:all .1s;text-decoration:none}
+.page-nav a:hover{color:var(--accent);border-color:var(--accent);background:var(--ibm-blue-light)}
+.lbadge,.badge{font-family:var(--mo);font-size:10px;padding:2px 8px;font-weight:600;margin-left:.75rem;text-transform:uppercase;letter-spacing:.04em}
+.lb,.badge-b{background:var(--ibm-green-light);color:#0e6027}
+.li,.badge-i{background:var(--ibm-yellow-light);color:#684e00}
+.la,.badge-a{background:var(--ibm-red-light);color:var(--ibm-red)}
 .chk{list-style:none;padding:0}
-.chk li{padding:.35rem 0;border-bottom:1px solid var(--br);color:var(--tx2);font-size:14px;display:flex;align-items:center;gap:.75rem}
-.chk li::before{content:'☐';font-size:16px;color:var(--br2)}
-.step-num{font-family:var(--mo);font-size:11px;background:var(--sf);border:1px solid var(--br);color:var(--g);padding:2px 7px;margin-right:.5rem}
-footer{border-top:1px solid var(--br);padding:1.5rem 2rem;background:var(--bg2);font-family:var(--mo);font-size:11px;color:var(--tx3);text-align:center}
-footer a{color:var(--tx3);margin:0 .75rem}footer a:hover{color:var(--g)}
-@media(max-width:700px){.main{padding:1.5rem 1rem}nav{display:none}}
+.chk li{padding:.4rem 0;border-bottom:1px solid var(--br);color:var(--tx2);font-size:14px;display:flex;align-items:center;gap:.75rem}
+.chk li::before{content:'☐';font-size:16px;color:var(--ibm-blue)}
+.step-num{font-family:var(--mo);font-size:11px;background:var(--ibm-blue);color:var(--ibm-white);padding:2px 8px;margin-right:.5rem;font-weight:600}
+
+footer{background:var(--ibm-gray-100);color:var(--ibm-gray-50);padding:2rem;border-top:1px solid var(--ibm-gray-80)}
+.footer-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.footer-left{font-size:12px;line-height:1.7}
+.footer-left a{color:var(--ibm-gray-30);text-decoration:none}.footer-left a:hover{color:var(--ibm-white)}
+.footer-links{display:flex;gap:1.5rem}
+.footer-links a{font-size:12px;color:var(--ibm-gray-50);text-decoration:none}.footer-links a:hover{color:var(--ibm-white)}
+
+@media(max-width:900px){
+  .content-wrap{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .main{padding:1.5rem 1rem;max-width:100%}
+  .topbar-nav{display:none}
+}
 </style>
+
 </head>
 <body>
-<header><div class="hi">
-  <a href="index.html" class="logo"><div class="logo-box">400</div>AS/400 LAB</a>
-  <nav><a href="index.html" class="">INÍCIO</a><a href="#" class="">MÓDULOS</a><a href="#" class="">LABS</a><a href="#" class="">SCRIPTS</a></nav>
-</div></header>
+<header class="topbar">
+  <a href="index.html" class="topbar-logo">
+    <div class="ibm-logo">
+      <div class="ibm-logo-bars">
+        <div class="ibm-logo-bar"></div><div class="ibm-logo-bar"></div><div class="ibm-logo-bar"></div>
+        <div class="ibm-logo-bar"></div><div class="ibm-logo-bar"></div><div class="ibm-logo-bar"></div>
+        <div class="ibm-logo-bar"></div>
+      </div>
+    </div>
+    <div class="topbar-divider"></div>
+    <span class="topbar-title">AS/400 Lab</span>
+  </a>
+  <nav class="topbar-nav">
+    <a href="index.html">Início</a>
+    <a href="index.html#modulos" class="active">Módulos</a>
+    <a href="index.html#labs" class="">Laboratórios</a>
+    <a href="index.html#scripts" class="">Scripts</a>
+    <a href="referencia-rapida.html" class="">Referência</a>
+  </nav>
+</header>
+<div class="breadcrumb-bar">
+  <div class="breadcrumb">
+    <a href="index.html">Todos os produtos</a>
+    <span>›</span>
+    <a href="index.html">AS/400 Lab</a>
+    <span>›</span><span>Módulos</span>
+  </div>
+</div>
+<div class="content-wrap">
+<nav class="sidebar">
+  <div class="sidebar-section">Módulos</div>
+  <a href="mod-01-introducao.html" class="active">Mod 01 — Introdução</a>
+  <a href="mod-02-navegacao.html">Mod 02 — Navegação</a>
+  <a href="mod-03-jobs.html">Mod 03 — Jobs</a>
+  <a href="mod-04-usuarios.html">Mod 04 — Usuários</a>
+  <a href="mod-05-objetos.html">Mod 05 — Objetos</a>
+  <a href="mod-06-mensagens.html">Mod 06 — Mensagens</a>
+  <a href="mod-07-subsistemas.html">Mod 07 — Subsistemas</a>
+  <a href="mod-08-spool.html">Mod 08 — Spool</a>
+  <a href="mod-09-backup.html">Mod 09 — Backup</a>
+  <a href="mod-10-performance.html">Mod 10 — Performance</a>
+  <a href="mod-11-redes.html">Mod 11 — Redes</a>
+  <div class="sidebar-section">Laboratórios</div>
+  <a href="lab-01-basico.html">Lab 01 — Básico</a>
+  <a href="lab-02-jobs.html">Lab 02 — Jobs</a>
+  <a href="lab-03-usuarios.html">Lab 03 — Usuários</a>
+  <a href="lab-04-objetos.html">Lab 04 — Objetos</a>
+  <a href="lab-05-manutencao.html">Lab 05 — Manutenção</a>
+  <div class="sidebar-section">Scripts</div>
+  <a href="script-monitoramento.html">Monitoramento</a>
+  <a href="script-limpeza-spool.html">Limpeza Spool</a>
+  <a href="script-backup-biblioteca.html">Backup Biblioteca</a>
+  <div class="sidebar-section">Referência</div>
+  <a href="referencia-rapida.html">Referência Rápida</a>
+</nav>
+<main class="main">
 <main class="main">
 <div class="crumb"><a href="index.html">Início</a> › Módulos › Módulo 01</div>
 <h1>Módulo 01 — Introdução ao AS/400 <span class="lbadge lb">BÁSICO</span></h1>
@@ -127,7 +234,7 @@ WRKSYSVAL                     /* Listar todas as variáveis */</pre>
 <div class="info"><strong>Dica:</strong> Pressione <code>F4</code> em qualquer comando para ver todos os parâmetros com descrição — é a forma mais rápida de aprender novos comandos!</div>
 <div class="page-nav"><span></span><a href="mod-02-navegacao.html">Módulo 02 — Navegação →</a></div>
 </main>
-<footer><a href="index.html">Início</a><a href="https://github.com/seu-usuario/as400-lab">GitHub</a> | AS/400 Lab — MIT License — 2024</footer>
+
 <script>
 document.querySelectorAll('pre').forEach(pre=>{
   const btn=document.createElement('button');
@@ -139,4 +246,29 @@ document.querySelectorAll('pre').forEach(pre=>{
   pre.appendChild(btn);
 });
 </script>
-</body></html>
+</main>
+</div>
+<footer>
+  <div class="footer-inner">
+    <div class="footer-left">
+      AS/400 Lab — Referência técnica IBM AS/400 / iSeries / IBM i<br>
+      Criado por <a href="https://github.com/alemiti7" target="_blank">alemiti7</a> · MIT License · 2024
+    </div>
+    <div class="footer-links">
+      <a href="https://github.com/alemiti7/AS-400-Lab-v2" target="_blank">GitHub</a>
+      <a href="referencia-rapida.html">Referência Rápida</a>
+      <a href="index.html">Início</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('pre').forEach(pre=>{
+  const btn=document.createElement('button');
+  btn.className='copy-btn';btn.textContent='Copiar';
+  btn.onclick=()=>{navigator.clipboard.writeText(pre.textContent.replace('Copiar','').trim());btn.textContent='Copiado!';setTimeout(()=>btn.textContent='Copiar',2000)};
+  pre.style.position='relative';pre.appendChild(btn);
+});
+</script>
+</body>
+</html>
