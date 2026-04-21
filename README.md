@@ -6,6 +6,9 @@ Laboratório prático de comandos básicos e intermediários para manutenção e
 
 Acesse a interface interativa em: [https://alemiti7.github.io/AS-400-Lab-v2/](https://alemiti7.github.io/AS-400-Lab-v2/)
 
+<img width="1906" height="925" alt="image" src="https://github.com/user-attachments/assets/e0e5fdc3-3e24-4756-a206-abb694ef9e5a" />
+
+
 ## 📁 Estrutura
 
 Todos os arquivos estão no diretório raiz (sem subdiretórios):
