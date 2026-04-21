@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AS/400 Lab — Laboratório de Comandos Técnicos IBM i</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ibm-blue:#0f62fe;--ibm-blue-hover:#0043ce;--ibm-blue-light:#edf5ff;--ibm-blue-mid:#d0e2ff;
+  --ibm-gray-100:#161616;--ibm-gray-90:#262626;--ibm-gray-80:#393939;--ibm-gray-70:#525252;
+  --ibm-gray-60:#6f6f6f;--ibm-gray-50:#8d8d8d;--ibm-gray-30:#c6c6c6;--ibm-gray-20:#e0e0e0;
+  --ibm-gray-10:#f4f4f4;--ibm-white:#ffffff;
+  --ibm-red:#da1e28;--ibm-red-light:#fff1f1;--ibm-yellow:#f1c21b;--ibm-yellow-light:#fcf4d6;
+  --ibm-green:#24a148;--ibm-green-light:#defbe6;--ibm-teal:#009d9a;--ibm-purple:#8a3ffc;
+  --ibm-cyan:#1192e8;
+  --bg:var(--ibm-white);--bg2:var(--ibm-gray-10);--bg3:var(--ibm-blue-light);
+  --tx:var(--ibm-gray-100);--tx2:var(--ibm-gray-70);--tx3:var(--ibm-gray-50);
+  --br:var(--ibm-gray-20);--br2:var(--ibm-gray-30);
+  --accent:var(--ibm-blue);--accent-h:var(--ibm-blue-hover);
+  --mo:'IBM Plex Mono',monospace;--sa:'IBM Plex Sans',sans-serif;
+  --header-h:48px;--sidebar-w:256px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sa);background:var(--bg);color:var(--tx);min-height:100vh;font-size:14px;line-height:1.5}
+a{color:var(--accent);text-decoration:none}
+a:hover{color:var(--accent-h);text-decoration:underline}
+
+/* TOP BAR */
+.topbar{height:var(--header-h);background:var(--ibm-gray-100);color:var(--ibm-white);display:flex;align-items:center;padding:0 1rem;position:sticky;top:0;z-index:200;border-bottom:1px solid var(--ibm-gray-80)}
+.topbar-logo{display:flex;align-items:center;gap:0;font-size:13px;font-weight:400;color:var(--ibm-white);text-decoration:none;flex-shrink:0}
+.ibm-logo{display:flex;align-items:center;gap:0;margin-right:16px}
+.ibm-logo-bars{display:flex;flex-direction:column;gap:2.5px}
+.ibm-logo-bar{height:3px;background:var(--ibm-white)}
+.ibm-logo-bar:nth-child(1){width:24px}
+.ibm-logo-bar:nth-child(2){width:18px}
+.ibm-logo-bar:nth-child(3){width:24px}
+.ibm-logo-bar:nth-child(4){width:18px}
+.ibm-logo-bar:nth-child(5){width:24px}
+.ibm-logo-bar:nth-child(6){width:18px}
+.ibm-logo-bar:nth-child(7){width:24px}
+.topbar-divider{width:1px;height:20px;background:var(--ibm-gray-70);margin:0 14px;flex-shrink:0}
+.topbar-title{font-size:13px;font-weight:400;color:var(--ibm-gray-30);white-space:nowrap}
+.topbar-nav{display:flex;align-items:center;gap:0;margin-left:auto}
+.topbar-nav a{color:var(--ibm-gray-30);font-size:13px;padding:0 14px;height:var(--header-h);display:flex;align-items:center;text-decoration:none;border-bottom:2px solid transparent;transition:all .1s}
+.topbar-nav a:hover{color:var(--ibm-white);background:var(--ibm-gray-80)}
+.topbar-nav a.active{color:var(--ibm-white);border-bottom-color:var(--ibm-blue)}
+.topbar-search{margin-left:8px;position:relative}
+.topbar-search input{background:var(--ibm-gray-80);border:1px solid var(--ibm-gray-70);color:var(--ibm-white);font-family:var(--sa);font-size:13px;padding:6px 32px 6px 10px;width:200px;outline:none}
+.topbar-search input::placeholder{color:var(--ibm-gray-50)}
+.topbar-search input:focus{border-color:var(--ibm-blue);background:var(--ibm-gray-90)}
+.search-icon{position:absolute;right:8px;top:50%;transform:translateY(-50%);color:var(--ibm-gray-50);font-size:14px;pointer-events:none}
+
+/* BREADCRUMB */
+.breadcrumb-bar{background:var(--bg2);border-bottom:1px solid var(--br);padding:0 2rem}
+.breadcrumb{font-size:12px;color:var(--tx3);display:flex;align-items:center;gap:0;height:40px;max-width:1200px;margin:0 auto}
+.breadcrumb a{color:var(--accent);font-size:12px;text-decoration:none}
+.breadcrumb a:hover{text-decoration:underline}
+.breadcrumb span{color:var(--tx3);margin:0 6px;font-size:11px}
+
+/* HERO */
+.hero{background:var(--ibm-gray-100);color:var(--ibm-white);padding:0}
+.hero-inner{max-width:1200px;margin:0 auto;padding:4rem 2rem 3rem;display:grid;grid-template-columns:1fr 420px;gap:4rem;align-items:center}
+.hero-eyebrow{font-family:var(--mo);font-size:11px;letter-spacing:.1em;color:var(--ibm-blue);text-transform:uppercase;margin-bottom:1rem}
+.hero h1{font-size:clamp(28px,4vw,48px);font-weight:300;line-height:1.15;color:var(--ibm-white);margin-bottom:1rem;letter-spacing:-.02em}
+.hero h1 strong{font-weight:600;color:var(--ibm-blue)}
+.hero-sub{font-size:16px;color:var(--ibm-gray-30);line-height:1.6;margin-bottom:.5rem}
+.hero-author{font-size:13px;color:var(--ibm-gray-50);margin-bottom:2rem}
+.hero-author a{color:var(--ibm-blue);text-decoration:none}
+.hero-author a:hover{text-decoration:underline}
+.hero-btns{display:flex;gap:.75rem;flex-wrap:wrap}
+.pdf-bar{display:flex;align-items:center;gap:.75rem;margin-top:1.25rem;padding:.75rem 1rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);flex-wrap:wrap}
+.pdf-icon{font-size:18px;color:var(--ibm-gray-30)}
+.pdf-label{font-size:12px;color:var(--ibm-gray-30);flex:1;min-width:120px}
+.pdf-btn{font-family:var(--mo);font-size:11px;font-weight:600;letter-spacing:.04em;padding:6px 14px;text-decoration:none;transition:all .1s;white-space:nowrap}
+.pdf-btn-view{background:transparent;color:var(--ibm-white);border:1px solid rgba(255,255,255,.4)}.pdf-btn-view:hover{background:rgba(255,255,255,.12);text-decoration:none;color:var(--ibm-white)}
+.pdf-btn-dl{background:var(--ibm-blue);color:var(--ibm-white);border:1px solid var(--ibm-blue)}.pdf-btn-dl:hover{background:var(--ibm-blue-hover);text-decoration:none;color:var(--ibm-white)}
+.btn{font-family:var(--sa);font-size:14px;font-weight:400;padding:12px 24px;display:inline-flex;align-items:center;gap:8px;cursor:pointer;border:none;text-decoration:none;transition:all .1s}
+.btn-primary{background:var(--ibm-blue);color:var(--ibm-white)}.btn-primary:hover{background:var(--ibm-blue-hover);color:var(--ibm-white);text-decoration:none}
+.btn-secondary{background:transparent;color:var(--ibm-white);border:1px solid var(--ibm-white)}.btn-secondary:hover{background:var(--ibm-white);color:var(--ibm-gray-100);text-decoration:none}
+.btn-ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}.btn-ghost:hover{background:var(--ibm-blue-light);text-decoration:none}
+
+/* HERO TERMINAL */
+.hero-term{background:#1a1a1a;border:1px solid #3d3d3d;overflow:hidden}
+.term-bar{background:#2d2d2d;padding:10px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #3d3d3d}
+.term-dot{width:12px;height:12px;border-radius:50%}
+.td-r{background:#ff5f57}.td-y{background:#ffbd2e}.td-g{background:#28ca41}
+.term-label{font-family:var(--mo);font-size:11px;color:#6f6f6f;margin-left:6px;letter-spacing:.06em}
+.term-body{padding:1.25rem 1.5rem;font-family:var(--mo);font-size:13px;line-height:1.9;min-height:240px;color:#d4d4d4}
+.tp{color:#4fc3f7}.tc{color:#fff}.to{color:#9e9e9e}.th{color:#ffcc80}.te{color:#ef9a9a}.tcm{color:#546e7a}
+.cur{display:inline-block;width:8px;height:15px;background:#4fc3f7;vertical-align:middle;animation:blink 1s step-end infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* STATS */
+.stats-bar{background:var(--ibm-gray-90);border-bottom:1px solid var(--ibm-gray-80)}
+.stats-inner{max-width:1200px;margin:0 auto;padding:1.5rem 2rem;display:flex;gap:0}
+.stat-item{flex:1;padding:0 2rem;border-right:1px solid var(--ibm-gray-80);text-align:center}
+.stat-item:first-child{padding-left:0;text-align:left}
+.stat-item:last-child{border-right:none;text-align:right;padding-right:0}
+.stat-num{font-size:32px;font-weight:300;color:var(--ibm-white);line-height:1;font-family:var(--sa)}
+.stat-lbl{font-size:11px;color:var(--ibm-gray-50);text-transform:uppercase;letter-spacing:.08em;margin-top:4px}
+
+/* MAIN SECTIONS */
+.main-wrap{max-width:1200px;margin:0 auto;padding:3rem 2rem}
+
+/* SECTION HEADER */
+.sec-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:1.5rem;padding-bottom:.75rem;border-bottom:1px solid var(--br)}
+.sec-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--tx2)}
+.sec-count{font-size:12px;color:var(--tx3);font-family:var(--mo)}
+
+/* MODULE GRID */
+.mod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;background:var(--br);border:1px solid var(--br);margin-bottom:3rem}
+.mod-card{background:var(--bg);padding:1.5rem;transition:background .1s;position:relative}
+.mod-card::after{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:transparent;transition:background .1s}
+.mod-card:hover{background:var(--ibm-blue-light)}
+.mod-card:hover::after{background:var(--ibm-blue)}
+.mod-card a{display:block;text-decoration:none;color:inherit}
+.mod-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem}
+.mod-num{font-family:var(--mo);font-size:11px;color:var(--tx3);letter-spacing:.08em}
+.badge{font-family:var(--mo);font-size:10px;padding:2px 8px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.badge-b{background:var(--ibm-green-light);color:#0e6027}
+.badge-i{background:var(--ibm-yellow-light);color:#684e00}
+.badge-a{background:var(--ibm-red-light);color:var(--ibm-red)}
+.mod-title{font-size:14px;font-weight:600;color:var(--tx);margin-bottom:.4rem;transition:color .1s}
+.mod-card:hover .mod-title{color:var(--accent)}
+.mod-desc{font-size:13px;color:var(--tx2);line-height:1.55}
+.mod-tags{margin-top:.85rem;display:flex;gap:4px;flex-wrap:wrap}
+.tag{font-family:var(--mo);font-size:10px;color:var(--tx3);background:var(--bg2);border:1px solid var(--br);padding:2px 6px}
+
+/* SEARCH */
+.search-sec{background:var(--bg2);border-top:1px solid var(--br);border-bottom:1px solid var(--br);padding:3rem 2rem}
+.search-inner{max-width:1200px;margin:0 auto}
+.search-bar{display:flex;border:1px solid var(--br2);margin-bottom:1.5rem;background:var(--bg)}
+.search-pfx{font-family:var(--mo);font-size:13px;color:var(--tx3);background:var(--bg2);padding:10px 14px;border-right:1px solid var(--br);white-space:nowrap;user-select:none}
+#cmd-search{flex:1;background:transparent;border:none;outline:none;font-family:var(--mo);font-size:13px;color:var(--tx);padding:10px 14px}
+#cmd-search:focus{outline:2px solid var(--ibm-blue);outline-offset:-2px}
+#cmd-search::placeholder{color:var(--tx3)}
+.cmd-results{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;background:var(--br);border:1px solid var(--br);max-height:420px;overflow-y:auto}
+.cmd-item{background:var(--bg);padding:1rem 1.25rem;border-left:3px solid transparent;transition:border-color .1s}
+.cmd-item:hover{background:var(--ibm-blue-light);border-left-color:var(--ibm-blue)}
+.cmd-name{font-family:var(--mo);font-size:14px;font-weight:600;color:var(--accent);margin-bottom:3px}
+.cmd-desc{font-size:12px;color:var(--tx2);line-height:1.5;margin-bottom:6px}
+.cmd-ex{font-family:var(--mo);font-size:11px;color:var(--tx2);background:var(--bg2);padding:4px 8px;border-left:2px solid var(--ibm-blue);word-break:break-all}
+.cmd-cat{font-family:var(--mo);font-size:10px;color:var(--tx3);border:1px solid var(--br);padding:2px 7px;margin-top:5px;display:inline-block;text-transform:uppercase}
+
+/* LABS */
+.lab-list{display:flex;flex-direction:column;gap:1px;background:var(--br);border:1px solid var(--br)}
+.lab-row{background:var(--bg);padding:1.25rem 1.5rem;display:flex;align-items:center;gap:1.5rem;transition:background .1s;border-left:3px solid transparent}
+.lab-row:hover{background:var(--ibm-blue-light);border-left-color:var(--ibm-blue)}
+.lab-row a{display:contents;color:inherit;text-decoration:none}
+.lab-row:hover .lab-title{color:var(--accent)}
+.lab-num{font-family:var(--mo);font-size:24px;font-weight:300;color:var(--br2);min-width:3rem}
+.lab-info{flex:1}
+.lab-title{font-size:14px;font-weight:600;color:var(--tx);margin-bottom:3px;transition:color .1s}
+.lab-desc{font-size:13px;color:var(--tx2)}
+.lab-meta{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.lab-time{font-family:var(--mo);font-size:11px;color:var(--tx3)}
+
+/* SCRIPTS */
+.scripts-sec{background:var(--bg2);border-top:1px solid var(--br);padding:3rem 2rem}
+.scripts-inner{max-width:1200px;margin:0 auto}
+.script-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1rem}
+.script-card{background:var(--bg);border:1px solid var(--br);border-top:3px solid var(--ibm-blue);padding:1.5rem;transition:box-shadow .1s}
+.script-card:hover{box-shadow:0 2px 12px rgba(15,98,254,.12)}
+.script-card a{display:block;text-decoration:none;color:inherit}
+.script-badge{font-family:var(--mo);font-size:10px;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem}
+.script-name{font-size:15px;font-weight:600;color:var(--tx);margin-bottom:.4rem;transition:color .1s}
+.script-card:hover .script-name{color:var(--accent)}
+.script-desc{font-size:13px;color:var(--tx2);line-height:1.6;margin-bottom:.75rem}
+.script-usage{font-family:var(--mo);font-size:11px;color:var(--accent);background:var(--ibm-blue-light);padding:5px 10px;border-left:2px solid var(--ibm-blue);word-break:break-all}
+
+/* FOOTER */
+footer{background:var(--ibm-gray-100);color:var(--ibm-gray-50);padding:2rem;border-top:1px solid var(--ibm-gray-80)}
+.footer-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.footer-left{font-size:12px;line-height:1.7}
+.footer-left a{color:var(--ibm-gray-30);text-decoration:none}
+.footer-left a:hover{color:var(--ibm-white)}
+.footer-links{display:flex;gap:1.5rem}
+.footer-links a{font-size:12px;color:var(--ibm-gray-50);text-decoration:none}
+.footer-links a:hover{color:var(--ibm-white)}
+
+@media(max-width:900px){
+  .hero-inner{grid-template-columns:1fr}
+  .hero-term{display:none}
+  .stats-inner{flex-wrap:wrap;gap:1.5rem}
+  .stat-item{border:none;text-align:left;padding:0}
+  .topbar-nav{display:none}
+  .topbar-search{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="topbar">
+  <a href="index.html" class="topbar-logo">
+    <div class="ibm-logo">
+      <div class="ibm-logo-bars">
+        <div class="ibm-logo-bar"></div>
+        <div class="ibm-logo-bar"></div>
+        <div class="ibm-logo-bar"></div>
+        <div class="ibm-logo-bar"></div>
+        <div class="ibm-logo-bar"></div>
+        <div class="ibm-logo-bar"></div>
+        <div class="ibm-logo-bar"></div>
+      </div>
+    </div>
+    <div class="topbar-divider"></div>
+    <span class="topbar-title">AS/400 Lab</span>
+  </a>
+  <nav class="topbar-nav">
+    <a href="#modulos" class="active">Módulos</a>
+    <a href="#comandos">Comandos</a>
+    <a href="#labs">Laboratórios</a>
+    <a href="#scripts">Scripts</a>
+    <a href="referencia-rapida.html">Referência</a>
+  </nav>
+  <div class="topbar-search">
+    <input id="top-search" type="text" placeholder="Pesquisar..."/>
+    <span class="search-icon">⌕</span>
+  </div>
+</header>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb-bar">
+  <div class="breadcrumb">
+    <a href="index.html">Todos os produtos</a>
+    <span>›</span>
+    <a href="index.html">AS/400 Lab</a>
+    <span>›</span>
+    <span>Início</span>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow">▸ Laboratório Técnico IBM AS/400 / iSeries / IBM i</div>
+      <h1>Comandos CL.<br><strong>Operação. Manutenção.</strong></h1>
+      <p class="hero-sub">Referência prática de comandos CL para operadores e técnicos do IBM AS/400. Da sessão interativa ao backup completo do sistema.</p>
+      <p class="hero-author">Criado por <a href="https://github.com/alemiti7" target="_blank">alemiti7</a> desde 2024 · IBM i / iSeries / AS400</p>
+      <div class="hero-btns">
+        <a href="https://github.com/alemiti7/AS-400-Lab-v2" class="btn btn-primary" target="_blank">Ver no GitHub →</a>
+        <a href="#comandos" class="btn btn-secondary">Buscar Comandos</a>
+      </div>
+      <div class="pdf-bar">
+        <span class="pdf-icon">⎙</span>
+        <span class="pdf-label">Manual de Referência Técnica (PDF)</span>
+        <a href="AS400-Lab-Manual.pdf" target="_blank" class="pdf-btn pdf-btn-view">Visualizar no browser</a>
+        <a href="AS400-Lab-Manual.pdf" download="AS400-Lab-Manual.pdf" class="pdf-btn pdf-btn-dl">⬇ Download</a>
+      </div>
+    </div>
+    <div class="hero-term">
+      <div class="term-bar">
+        <div class="term-dot td-r"></div>
+        <div class="term-dot td-y"></div>
+        <div class="term-dot td-g"></div>
+        <span class="term-label">QCMD — AS400SRV — OPERADOR</span>
+      </div>
+      <div class="term-body" id="tb"></div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <div class="stat-num">11</div>
+      <div class="stat-lbl">Módulos</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">5</div>
+      <div class="stat-lbl">Laboratórios</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">150+</div>
+      <div class="stat-lbl">Comandos CL</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">3</div>
+      <div class="stat-lbl">Scripts CLP</div>
+    </div>
+  </div>
+</div>
+
+<!-- MODULES -->
+<div class="main-wrap" id="modulos">
+  <div class="sec-header">
+    <span class="sec-title">Módulos de Estudo</span>
+    <span class="sec-count">11 módulos · básico ao avançado</span>
+  </div>
+  <div class="mod-grid" id="mg"></div>
+</div>
+
+<!-- COMMAND SEARCH -->
+<section class="search-sec" id="comandos">
+  <div class="search-inner">
+    <div class="sec-header">
+      <span class="sec-title">Busca Rápida de Comandos</span>
+      <span class="sec-count">50+ comandos documentados</span>
+    </div>
+    <div class="search-bar">
+      <span class="search-pfx">===></span>
+      <input id="cmd-search" type="text" placeholder="Ex: WRKACTJOB, backup, usuário, jobs..." autocomplete="off" spellcheck="false"/>
+    </div>
+    <div class="cmd-results" id="cr"></div>
+  </div>
+</section>
+
+<!-- LABS -->
+<div class="main-wrap" id="labs">
+  <div class="sec-header">
+    <span class="sec-title">Laboratórios Práticos</span>
+    <span class="sec-count">5 laboratórios progressivos</span>
+  </div>
+  <div class="lab-list" id="ll"></div>
+</div>
+
+<!-- SCRIPTS -->
+<section class="scripts-sec" id="scripts">
+  <div class="scripts-inner">
+    <div class="sec-header">
+      <span class="sec-title">Scripts CLP</span>
+      <span class="sec-count">prontos para compilar e usar</span>
+    </div>
+    <div class="script-grid" id="sl"></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-left">
+      AS/400 Lab — Referência técnica IBM AS/400 / iSeries / IBM i<br>
+      Criado por <a href="https://github.com/alemiti7" target="_blank">alemiti7</a> · MIT License · 2024
+    </div>
+    <div class="footer-links">
+      <a href="https://github.com/alemiti7/AS-400-Lab-v2" target="_blank">GitHub</a>
+      <a href="referencia-rapida.html">Referência Rápida</a>
+      <a href="mod-01-introducao.html">Documentação</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+const MODS=[
+  {n:'01',t:'Introdução ao AS/400',lv:'b',desc:'Conceitos fundamentais, objetos, bibliotecas e primeiros comandos do sistema.',tags:['DSPSYSVAL','DSPJOB','SIGNOFF'],f:'mod-01-introducao.html'},
+  {n:'02',t:'Navegação e Menus',lv:'b',desc:'Menus do sistema, atalhos de teclado e navegação por telas 5250.',tags:['GO MAIN','SYSREQ','F4'],f:'mod-02-navegacao.html'},
+  {n:'03',t:'Gerenciamento de Jobs',lv:'i',desc:'Monitoramento, controle e agendamento de jobs batch e interativos.',tags:['WRKACTJOB','SBMJOB','ENDJOB'],f:'mod-03-jobs.html'},
+  {n:'04',t:'Usuários e Segurança',lv:'i',desc:'Perfis, senhas, autoridades sobre objetos e auditoria de segurança.',tags:['WRKUSRPRF','GRTOBJAUT','DSPOBJAUT'],f:'mod-04-usuarios.html'},
+  {n:'05',t:'Bibliotecas e Objetos',lv:'i',desc:'Criação, cópia, movimentação e gerenciamento de objetos e bibliotecas.',tags:['CRTLIB','CPYF','WRKOBJ'],f:'mod-05-objetos.html'},
+  {n:'06',t:'Mensagens e Filas',lv:'b',desc:'Sistema de mensagens, filas de mensagens e diagnóstico por logs.',tags:['DSPMSG','SNDMSG','DSPLOG'],f:'mod-06-mensagens.html'},
+  {n:'07',t:'Subsistemas',lv:'i',desc:'Controle de subsistemas, pools de memória e procedimentos de IPL.',tags:['WRKSBS','STRSBS','ENDSBS'],f:'mod-07-subsistemas.html'},
+  {n:'08',t:'Spool e Impressão',lv:'b',desc:'Gerenciamento de arquivos de spool, output queues e writers de impressão.',tags:['WRKSPLF','CLROUTQ','STRPRTWTR'],f:'mod-08-spool.html'},
+  {n:'09',t:'Backup e Restauração',lv:'a',desc:'SAVE/RESTORE, Save Files, journaling e recuperação de dados.',tags:['SAVLIB','RSTLIB','STRJRNPF'],f:'mod-09-backup.html'},
+  {n:'10',t:'Performance',lv:'i',desc:'Monitoramento de CPU, memória, disco e diagnóstico de locks.',tags:['WRKSYSSTS','WRKDSKSTS','WRKOBJLCK'],f:'mod-10-performance.html'},
+  {n:'11',t:'Redes e Comunicação',lv:'i',desc:'TCP/IP, FTP, status de linhas e diagnóstico de conectividade.',tags:['NETSTAT','PING','STRTCP'],f:'mod-11-redes.html'},
+];
+const LV={b:{l:'Básico',c:'badge-b'},i:{l:'Intermediário',c:'badge-i'},a:{l:'Avançado',c:'badge-a'}};
+document.getElementById('mg').innerHTML=MODS.map(m=>`<div class="mod-card"><a href="${m.f}"><div class="mod-top"><span class="mod-num">MOD-${m.n}</span><span class="badge ${LV[m.lv].c}">${LV[m.lv].l}</span></div><div class="mod-title">${m.t}</div><div class="mod-desc">${m.desc}</div><div class="mod-tags">${m.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div></a></div>`).join('');
+
+const LABS=[
+  {n:'01',t:'Comandos Básicos',lv:'b',desc:'Navegação, variáveis de sistema, lista de bibliotecas e mensagens.',time:'30–45 min',f:'lab-01-basico.html'},
+  {n:'02',t:'Gerenciamento de Jobs',lv:'i',desc:'Submissão de jobs, controle de filas, job log e agendamento.',time:'45–60 min',f:'lab-02-jobs.html'},
+  {n:'03',t:'Usuários e Segurança',lv:'i',desc:'Criação de usuários, bloqueio/desbloqueio, autoridades em objetos.',time:'45–60 min',f:'lab-03-usuarios.html'},
+  {n:'04',t:'Objetos e Bibliotecas',lv:'i',desc:'Criação, cópia, movimentação, backup e restauração de objetos.',time:'45–60 min',f:'lab-04-objetos.html'},
+  {n:'05',t:'Manutenção do Sistema',lv:'a',desc:'Performance, spool, log do sistema e checklist de manutenção preventiva.',time:'60–90 min',f:'lab-05-manutencao.html'},
+];
+document.getElementById('ll').innerHTML=LABS.map(l=>`<div class="lab-row"><a href="${l.f}"><div class="lab-num">${l.n}</div><div class="lab-info"><div class="lab-title">${l.t}</div><div class="lab-desc">${l.desc}</div></div><div class="lab-meta"><span class="badge ${LV[l.lv].c}">${LV[l.lv].l}</span><span class="lab-time">${l.time}</span></div></a></div>`).join('');
+
+const SCRIPTS=[
+  {ico:'SCRIPT · CLP',n:'script-monitoramento.html',lbl:'monitoramento.clp',desc:'Relatório completo de status: CPU, jobs, disco, subsistemas e impressoras.',u:'CALL PGM(SCRIPTLIB/MONITORA)'},
+  {ico:'SCRIPT · CLP',n:'script-limpeza-spool.html',lbl:'limpeza-spool.clp',desc:'Remove arquivos de spool expirados e limpa output queues configuradas.',u:'CALL PGM(SCRIPTLIB/LIMPSPOOL)'},
+  {ico:'SCRIPT · CLP',n:'script-backup-biblioteca.html',lbl:'backup-biblioteca.clp',desc:'Backup parametrizado de biblioteca para Save File com nome automático por data.',u:"CALL PGM(SCRIPTLIB/BKPLIB) PARM('PRODLIB' 'BKPLIB')"},
+];
+document.getElementById('sl').innerHTML=SCRIPTS.map(s=>`<div class="script-card"><a href="${s.n}"><div class="script-badge">${s.ico}</div><div class="script-name">${s.lbl}</div><div class="script-desc">${s.desc}</div><div class="script-usage">${s.u}</div></a></div>`).join('');
+
+const CMDS=[
+  {nm:'WRKACTJOB',ct:'jobs',d:'Lista todos os jobs ativos no sistema com status e CPU%',ex:'WRKACTJOB SBS(*ALL)'},
+  {nm:'SBMJOB',ct:'jobs',d:'Submete um job para execução em batch',ex:'SBMJOB CMD(CALL PGM(LIB/PGM)) JOBQ(QBATCH)'},
+  {nm:'ENDJOB',ct:'jobs',d:'Encerra job — use *CNTRLD para encerramento seguro',ex:'ENDJOB JOB(num/usr/nome) OPTION(*CNTRLD)'},
+  {nm:'HLDJOB',ct:'jobs',d:'Pausa (hold) a execução de um job',ex:'HLDJOB JOB(num/usr/nome)'},
+  {nm:'RLSJOB',ct:'jobs',d:'Libera um job pausado para continuar',ex:'RLSJOB JOB(num/usr/nome)'},
+  {nm:'DSPJOBLOG',ct:'jobs',d:'Exibe o log de mensagens do job atual ou de job específico',ex:'DSPJOBLOG'},
+  {nm:'ADDJOBSCDE',ct:'jobs',d:'Agenda um job para execução periódica',ex:"ADDJOBSCDE JOB(x) CMD(y) FRQ(*DAILY) SCDTIME('22:00:00')"},
+  {nm:'WRKJOBQ',ct:'jobs',d:'Exibe e gerencia jobs nas filas de execução',ex:'WRKJOBQ JOBQ(QBATCH)'},
+  {nm:'WRKUSRPRF',ct:'usuarios',d:'Lista e gerencia perfis de usuários do sistema',ex:'WRKUSRPRF USRPRF(*ALL)'},
+  {nm:'CRTUSRPRF',ct:'usuarios',d:'Cria novo perfil de usuário',ex:'CRTUSRPRF USRPRF(xxx) PASSWORD(yyy) USRCLS(*USER)'},
+  {nm:'CHGUSRPRF',ct:'usuarios',d:'Altera atributos de um perfil de usuário',ex:'CHGUSRPRF USRPRF(xxx) STATUS(*DISABLED)'},
+  {nm:'DLTUSRPRF',ct:'usuarios',d:'Exclui perfil de usuário do sistema',ex:'DLTUSRPRF USRPRF(xxx) OWNOBJOPT(*NODLT)'},
+  {nm:'GRTOBJAUT',ct:'usuarios',d:'Concede autoridade a usuário sobre objeto',ex:'GRTOBJAUT OBJ(lib/arq) OBJTYPE(*FILE) USER(xxx) AUT(*USE)'},
+  {nm:'DSPOBJAUT',ct:'usuarios',d:'Exibe quem tem autoridade sobre um objeto',ex:'DSPOBJAUT OBJ(lib/arq) OBJTYPE(*FILE)'},
+  {nm:'RVKOBJAUT',ct:'usuarios',d:'Revoga autoridade de usuário sobre objeto',ex:'RVKOBJAUT OBJ(lib/arq) OBJTYPE(*FILE) USER(xxx)'},
+  {nm:'WRKLIB',ct:'objetos',d:'Lista e gerencia bibliotecas do sistema',ex:'WRKLIB LIB(PROD*)'},
+  {nm:'CRTLIB',ct:'objetos',d:'Cria nova biblioteca',ex:"CRTLIB LIB(xxx) TYPE(*PROD) TEXT('descricao')"},
+  {nm:'DLTLIB',ct:'objetos',d:'⚠ Exclui biblioteca e TODO seu conteúdo',ex:'DLTLIB LIB(xxx)'},
+  {nm:'WRKOBJ',ct:'objetos',d:'Lista objetos em biblioteca com filtro por tipo',ex:'WRKOBJ OBJ(lib/*ALL) OBJTYPE(*FILE)'},
+  {nm:'CPYF',ct:'objetos',d:'Copia arquivo físico entre bibliotecas',ex:'CPYF FROMFILE(lib/orig) TOFILE(lib/dest) CRTFILE(*YES)'},
+  {nm:'DSPPFM',ct:'objetos',d:'Exibe registros de um arquivo físico',ex:'DSPPFM FILE(lib/arq)'},
+  {nm:'CLRPFM',ct:'objetos',d:'⚠ Apaga TODOS os registros de arquivo físico',ex:'CLRPFM FILE(lib/arq)'},
+  {nm:'SAVLIB',ct:'backup',d:'Salva biblioteca completa em fita ou Save File',ex:'SAVLIB LIB(xxx) DEV(*SAVF) SAVF(lib/bkp)'},
+  {nm:'RSTLIB',ct:'backup',d:'Restaura biblioteca a partir de backup',ex:'RSTLIB SAVLIB(xxx) DEV(*SAVF) SAVF(lib/bkp)'},
+  {nm:'CRTSAVF',ct:'backup',d:'Cria arquivo de backup em disco (Save File)',ex:"CRTSAVF FILE(lib/bkp) TEXT('backup')"},
+  {nm:'DSPSAVF',ct:'backup',d:'Exibe conteúdo de um Save File',ex:'DSPSAVF FILE(lib/bkp)'},
+  {nm:'SAVSYS',ct:'backup',d:'Salva sistema operacional completo (modo restrito)',ex:'SAVSYS DEV(TAP01)'},
+  {nm:'STRJRNPF',ct:'backup',d:'Inicia journaling em arquivo físico',ex:'STRJRNPF FILE(lib/arq) JRN(lib/jrn)'},
+  {nm:'WRKSYSSTS',ct:'perf',d:'Status de CPU, memória e paginação em tempo real',ex:'WRKSYSSTS'},
+  {nm:'WRKDSKSTS',ct:'perf',d:'Status e uso de disco (ASP)',ex:'WRKDSKSTS'},
+  {nm:'WRKOBJLCK',ct:'perf',d:'Exibe locks ativos sobre objeto específico',ex:'WRKOBJLCK OBJ(lib/arq) OBJTYPE(*FILE)'},
+  {nm:'DSPLOG',ct:'perf',d:'Exibe log histórico de mensagens do sistema',ex:'DSPLOG LOG(QHST)'},
+  {nm:'DSPPTF',ct:'perf',d:'Exibe PTFs (patches) instaladas',ex:'DSPPTF LICPGM(*ALL)'},
+  {nm:'WRKSPLF',ct:'spool',d:'Lista arquivos de spool do usuário ou todos',ex:'WRKSPLF SELECT(*ALL)'},
+  {nm:'WRKOUTQ',ct:'spool',d:'Lista e gerencia output queues de impressão',ex:'WRKOUTQ OUTQ(QPRINT)'},
+  {nm:'CLROUTQ',ct:'spool',d:'⚠ Remove todos os spools de uma output queue',ex:'CLROUTQ OUTQ(QPRINT)'},
+  {nm:'STRPRTWTR',ct:'spool',d:'Inicia writer de impressora',ex:'STRPRTWTR DEV(IMPR01)'},
+  {nm:'ENDWTR',ct:'spool',d:'Encerra writer de impressão de forma controlada',ex:'ENDWTR WTR(IMPR01) OPTION(*CNTRLD)'},
+  {nm:'NETSTAT',ct:'rede',d:'Status de interfaces, rotas e conexões TCP/IP',ex:'NETSTAT OPTION(*IFC)'},
+  {nm:'PING',ct:'rede',d:'Testa conectividade TCP/IP com host remoto',ex:"PING RMTSYS('192.168.1.1')"},
+  {nm:'STRTCP',ct:'rede',d:'Inicia todos os serviços TCP/IP',ex:'STRTCP'},
+  {nm:'STRTCPSVR',ct:'rede',d:'Inicia serviço TCP/IP específico',ex:'STRTCPSVR SERVER(*FTP)'},
+  {nm:'VRYCFG',ct:'rede',d:'Varia linha ou dispositivo online/offline',ex:'VRYCFG CFGOBJ(LIN1) CFGTYPE(*LIN) STATUS(*ON)'},
+  {nm:'WRKSBS',ct:'sbs',d:'Lista e gerencia subsistemas ativos',ex:'WRKSBS'},
+  {nm:'STRSBS',ct:'sbs',d:'Inicia um subsistema',ex:'STRSBS SBSD(QBATCH)'},
+  {nm:'ENDSBS',ct:'sbs',d:'Encerra subsistema — use *CNTRLD para encerramento seguro',ex:'ENDSBS SBS(xxx) OPTION(*CNTRLD) DELAY(300)'},
+  {nm:'PWRDWNSYS',ct:'sbs',d:'⚠ Encerra e reinicia o sistema (IPL)',ex:'PWRDWNSYS OPTION(*CNTRLD) RESTART(*YES)'},
+  {nm:'DSPMSG',ct:'msg',d:'Exibe mensagens da fila pessoal ou especificada',ex:'DSPMSG MSGQ(QSYSOPR)'},
+  {nm:'SNDMSG',ct:'msg',d:'Envia mensagem para usuário ou fila',ex:"SNDMSG MSG('texto') TOUSR(xxx)"},
+  {nm:'DSPSYSVAL',ct:'sistema',d:'Exibe variável de sistema (configurações)',ex:'DSPSYSVAL SYSVAL(QDATE)'},
+  {nm:'CHGSYSVAL',ct:'sistema',d:'Altera variável de sistema',ex:'CHGSYSVAL SYSVAL(QPWDMINLEN) VALUE(8)'},
+  {nm:'DSPJOB',ct:'sistema',d:'Exibe atributos e informações do job atual',ex:'DSPJOB'},
+  {nm:'ADDLIBLE',ct:'sistema',d:'Adiciona biblioteca à lista de bibliotecas do usuário',ex:'ADDLIBLE LIB(xxx)'},
+  {nm:'DSPLIBL',ct:'sistema',d:'Exibe a lista de bibliotecas ativa',ex:'DSPLIBL'},
+];
+function renderCmds(list){
+  document.getElementById('cr').innerHTML=list.length
+    ?list.map(c=>`<div class="cmd-item"><div class="cmd-name">${c.nm}</div><div class="cmd-desc">${c.d}</div><div class="cmd-ex">${c.ex}</div><span class="cmd-cat">${c.ct}</span></div>`).join('')
+    :'<div class="cmd-item"><div class="cmd-desc" style="color:#8d8d8d">Nenhum comando encontrado.</div></div>';
+}
+renderCmds(CMDS.slice(0,15));
+document.getElementById('cmd-search').addEventListener('input',function(){
+  const q=this.value.toLowerCase().trim();
+  renderCmds(q?CMDS.filter(c=>c.nm.toLowerCase().includes(q)||c.d.toLowerCase().includes(q)||c.ct.includes(q)||c.ex.toLowerCase().includes(q)):CMDS.slice(0,15));
+});
+document.getElementById('top-search').addEventListener('input',function(){
+  const q=this.value.toLowerCase().trim();
+  if(q.length>1){document.getElementById('cmd-search').value=this.value;renderCmds(CMDS.filter(c=>c.nm.toLowerCase().includes(q)||c.d.toLowerCase().includes(q)||c.ct.includes(q)||c.ex.toLowerCase().includes(q)));document.getElementById('comandos').scrollIntoView({behavior:'smooth'});}
+});
+
+// terminal animation
+const TL=[
+  {d:0,h:'<div><span class="tp">===></span> <span class="tc">WRKACTJOB</span></div>'},
+  {d:700,h:'<div class="to">&nbsp;&nbsp;&nbsp;Work with Active Jobs &nbsp;&nbsp;AS400SRV</div>'},
+  {d:800,h:'<div class="to">&nbsp;CPU %: <span class="th">28.4</span>&nbsp;&nbsp;Jobs ativos: <span class="th">51</span></div>'},
+  {d:900,h:'<div class="to">&nbsp;</div>'},
+  {d:1000,h:'<div class="to">&nbsp;Opt &nbsp;Job &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;User &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CPU%&nbsp;STS</div>'},
+  {d:1100,h:'<div class="to">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;QSYSCOMM &nbsp;&nbsp;QSYS &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.0 &nbsp;DEQW</div>'},
+  {d:1200,h:'<div class="to">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;QPADEV0001&nbsp;OPERADOR &nbsp;&nbsp;1.2 &nbsp;RUN</div>'},
+  {d:1300,h:'<div class="to">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BATCNOITE &nbsp;PRODUCAO &nbsp;&nbsp;<span class="te">91.3</span>&nbsp;RUN</div>'},
+  {d:1400,h:'<div class="to">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RELATORIO &nbsp;MARIA &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.0 &nbsp;<span class="th">MSGW</span></div>'},
+  {d:2100,h:'<div><span class="tp">===></span> <span class="tc">ENDJOB JOB(BATCNOITE) OPTION(*CNTRLD)</span></div>'},
+  {d:3000,h:'<div class="tcm">&nbsp;/* Job encerrado com sucesso */</div>'},
+  {d:3600,h:'<div><span class="tp">===></span> <span class="cur"></span></div>'},
+];
+function runTerm(){
+  const b=document.getElementById('tb');b.innerHTML='';
+  TL.forEach(l=>setTimeout(()=>{
+    const last=b.querySelector('.cur');if(last)last.closest('div').remove();
+    b.insertAdjacentHTML('beforeend',l.h);b.scrollTop=b.scrollHeight;
+  },l.d));
+}
+runTerm();setInterval(runTerm,8000);
+</script>
+</body>
+</html>
