@@ -4,7 +4,7 @@ Laboratório prático de comandos básicos e intermediários para manutenção e
 
 ## 🌐 GitHub Pages
 
-Acesse a interface interativa em: `https://alemiti7.github.io/AS-400-Lab-v2/`
+Acesse a interface interativa em: [https://alemiti7.github.io/AS-400-Lab-v2/](https://alemiti7.github.io/AS-400-Lab-v2/)
 
 ## 📁 Estrutura
 
